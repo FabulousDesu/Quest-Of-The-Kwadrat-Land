@@ -12,6 +12,8 @@ export default class PlayScene extends Scene {
     console.log(i);
 
     const bomb = this.physics.add.image(400, 200, 'bomb');
+    bomb.scaleX = 2;
+    bomb.scaleY = 2;
     bomb.setCollideWorldBounds(true);
     bomb.body.onWorldBounds = true; // enable worldbounds collision event
     bomb.setBounce(1);
