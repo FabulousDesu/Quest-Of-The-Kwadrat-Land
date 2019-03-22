@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import BootScene from './scenes/BootScene'
 import PlayScene from './scenes/PlayScene'
+import FightScene from './scenes/FightScene'
 
 
 function launch() {
@@ -12,11 +13,12 @@ function launch() {
         physics: {
             default: 'arcade',
             arcade: {
-                gravity: {y: 300},
+                gravity: {y: 0},
                 debug: false
             }
         },
-        scene: [BootScene, PlayScene]
+        pixelArt: true,
+        scene: [BootScene, PlayScene, FightScene]
     })
 }
 
