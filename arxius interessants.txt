@@ -1,0 +1,18 @@
+Cartes drag -> http://labs.phaser.io/edit.html?src=src/input\multitouch\multi%20drag.js
+Fer les cartes pases el ratoli per sobre -> http://labs.phaser.io/edit.html?src=src\input\mouse\circle%20hit%20area.js
+
+
+Coses per fer:
+  Cartes
+    Crear carta com a tal
+    Transformar cartes en peces quan surten de la ma
+    Drag de les Cartes
+
+  Pila de cartes del jugador
+    Controlar cartes que entre i com son
+
+  Tauler
+    Crear tauler com a tal
+    Creació d'aquest i les intereccions amb les peces
+      Quan es col·loca una carta aquesta es transforma en quadradets  
+    Crear grid per deixar peces
