@@ -21,8 +21,8 @@ export default class FightScene extends Scene {
 
     this.tauler = new Tauler(this, 200, 200);
     this.children.add(this.tauler);
-    this.children.add(new Carta(this, 400, 400, 2, [[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,1,1,0]]));
-    this.children.add(new Carta(this, 500, 400, 1, [[0,1,0,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]]));
+    this.ma = new Ma(this, 400, 500)
+    this.children.add(this.ma);
     this.children.add(new Enemy(this, 600, 200));
   }
 
@@ -41,6 +41,42 @@ export class Enemy extends Phaser.GameObjects.Sprite{
   }
 }
 
+class Ma extends Phaser.GameObjects.Sprite{
+  constructor (scene, x, y) {
+    super(scene, x, y, 'bomb');
+    this.scene = scene;
+    this.accions = 0;
+
+    this.cartes = [new Carta(scene, 0, 0, 2, [[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,1,1,0]]),
+                   new Carta(scene, 0, 0, 3, [[0,0,1,0],[0,0,1,0],[0,1,1,0],[0,1,0,0]]),
+                   new Carta(scene, 0, 0, 4, [[0,1,1,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]]),
+                   new Carta(scene, 0, 0, 1, [[0,1,0,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]])];
+
+    this.cartes.forEach(function(element){
+      scene.children.add(element);
+    })
+
+    let that = this;
+    this.ordenarCartes = function(){
+      let aux = 0;
+      let mida = that.cartes.length;
+      that.cartes.forEach(function(element, index){
+        element.desplacarA([that.x + (index + 0.5 - mida/2) * 75, that.y]);
+      })
+    };
+
+    this.ordenarCartes();
+
+    this.afegirCartes = function(type, forma = [[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]]){
+      that.cartes.push(new Carta(that.scene, 0,0, type, forma));
+      that.scene.children.add(that.cartes[that.cartes.length-1]);
+      that.ordenarCartes();
+    };
+
+    this.afegirCartes();
+  }
+}
+
 export class Tauler extends Phaser.GameObjects.Grid{
   constructor (scene, x, y){
     super(scene, x, y, 300, 300, 50, 50, 0x00b9f2).setAltFillStyle(0x016fce);
@@ -55,7 +91,6 @@ export class Tauler extends Phaser.GameObjects.Grid{
                    [0,0,0,0,0,0]];
     //Buida = 0, Foc = 1, Gel = 2, Veri = 3 i Extra = 4
 
-    console.log(this.matriu);
     this.valors = [0,0,0,0,0];
 
     this.scene = scene;
@@ -107,8 +142,9 @@ export class Tauler extends Phaser.GameObjects.Grid{
         }
       }
       that.valors[carta.type] += aux;
-      console.log(that.matriu);
-
+      aux = that.scene.ma.cartes.indexOf(carta);
+      that.scene.ma.cartes.splice(aux, 1);
+      that.scene.ma.ordenarCartes();
       return true;
     }
 

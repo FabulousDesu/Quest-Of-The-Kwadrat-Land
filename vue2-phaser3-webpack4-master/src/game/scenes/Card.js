@@ -43,12 +43,9 @@ export class Carta extends Phaser.GameObjects.Sprite{
 
     this.lastPos = [this.x, this.y];
     this.on('pointerover', function () {
-      if (!Globals.mouseOnCard){
         that.setScale(1.5);
         that.dibuixarPeces(0.75);
         //that.fitxa.forEach(function(element){element.setDepth(2)});
-        Globals.mouseOnCard = true;
-      }
     });
 
     this.on('pointerout', function () {
@@ -75,7 +72,6 @@ export class Carta extends Phaser.GameObjects.Sprite{
     });
 
     this.on('dragend', function (pointer) {
-      Globals.mouseOnCard = false;
       that.setVisible(true);
       that.dibuixarPeces(0.5);
       if(that.scene.tauler.colocarCarta(that)){
@@ -91,6 +87,14 @@ export class Carta extends Phaser.GameObjects.Sprite{
     //EXTRES
     this.getMatriuPeca = function(){
       return this.val;
+    }
+
+    this.desplacarA = function(novaPos){
+      that.inicialPos[0] = novaPos[0];
+      that.inicialPos[1] = novaPos[1];
+      that.x = that.inicialPos[0];
+      that.y = that.inicialPos[1];
+      that.dibuixarPeces(0.5);
     }
   }
 }
