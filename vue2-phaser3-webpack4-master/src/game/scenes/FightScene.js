@@ -1,13 +1,13 @@
 import { Scene } from 'phaser';
+import { Carta } from './Card.js';
+import { Globals } from './Globals.js';
 
 var graphics;
 var rect;
-var zone;
 
 export default class FightScene extends Scene {
   constructor () {
     super({ key: 'FightScene' });
-
   }
 
   create () {
@@ -20,17 +20,17 @@ export default class FightScene extends Scene {
     this.tauler.scaleX = 3;
     this.tauler.scaleY = 3;
 
-    this.children.add(new Card(this, 400, 500));
+    this.children.add(new Tauler(this, 200, 200));
+    this.children.add(new Carta(this, 400, 400));
+    this.children.add(new Peca(this, 350, 500, 1, "fire"));
     this.children.add(new Enemy(this, 600, 200));
 
-    zone = this.add.zone(200, 200, 300, 300).setRectangleDropZone(300, 300);
+    //zone = this.add.zone(200, 200, 300, 300).setRectangleDropZone(300, 300);
   }
 
   update () {
     graphics.clear();
     graphics.strokeRectShape(rect);
-    graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
-
   }
 }
 
@@ -38,64 +38,72 @@ export class Enemy extends Phaser.GameObjects.Sprite{
   constructor (scene, x, y) {
     super(scene, x, y, 'enemic');
     this.health = 20;
-    this.damage = 5;
+    this.shield = 0;
+    this.rang_accio = [[1, 5], [1, 5]] // 0 = Attack 1 = Shield
   }
+}
+
+export class Tauler extends Phaser.GameObjects.Grid{
+  constructor (scene, x, y){
+    super(scene, x, y, 300, 300, 50, 50, 0x00b9f2).setAltFillStyle(0x016fce);
+    this.mida = 6;
+    this.matriu = [[0,0,0,0,0,0],
+                   [0,0,0,0,0,0],
+                   [0,0,0,0,0,0],
+                   [0,0,0,0,0,0],
+                   [0,0,0,0,0,0],
+                   [0,0,0,0,0,0]];
+    //Buida = 0, Foc = 1, Gel = 2, Veri = 3 i Extra = 4
+
+    console.log(this.matriu);
+    this.valors = {"foc": 0, "gel": 0, "veri": 0, "extra": 0}
+    }
 
 }
 
-export class Card extends Phaser.GameObjects.Sprite {
-  constructor (scene, x, y) {
-    super(scene, x, y, 'carta');
+export class Peca extends Phaser.GameObjects.Sprite{
+  constructor(scene, x, y, val, type){
+    var a = super(scene, x, y, 'carta');
+    this.val = [[0,0,0,0],
+                [0,1,1,0],
+                [0,1,1,0],
+                [0,0,0,0]]; // = random figure with val valors
+    this.type = type;
+    this.fitxa = [];
+
+    for(var i = -2; i < 2; i++){
+      for(var j = -2; j < 2; j++){
+        if(this.val[j+2][i+2] == 1){
+          this.fitxa.push(scene.add.sprite(x+16*i,y+16*j,'fitxa', 3));
+          this.fitxa[this.fitxa.length-1].scaleX = 0.5
+          this.fitxa[this.fitxa.length-1].scaleY = 0.5
+        }
+      }
+
+    }
+
+    this.punt_clau = [2,2];
     this.setInteractive();
     scene.input.setDraggable(this);
 
-    this.on('pointerover', function (event) {
+    var that = this;
+    this.on('dragstart', function (pointer) {
 
-      this.y -= 20
-      this.scaleX = 2
-      this.scaleY = 2
-
-    });
-
-    this.on('pointerout', function (event) {
-
-      this.y += 20
-      this.scaleX = 1
-      this.scaleY = 1
+      that.setTint(0xff0000);
 
     });
 
-    scene.input.on('dragstart', (pointer, gameObject) => {
+    this.on('drag', function (pointer, dragX, dragY) {
 
-      scene.children.bringToTop(gameObject);
-
-    }, this);
-
-    scene.input.on('drag', (pointer, gameObject, dragX, dragY) => {
-      gameObject.x = dragX;
-      gameObject.y = dragY;
-    });
-
-    scene.input.on('dragenter', function (pointer, gameObject, dropZone) {
-      console.log("hello");
-    });
-
-    scene.input.on('dragleave', function (pointer, gameObject, dropZone) {
-      console.log("bye");
-    });
-
-    scene.input.on('drop', function (pointer, gameObject, dropZone) {
-
-      gameObject.input.enabled = false;
+      that.x = dragX;
+      that.y = dragY;
 
     });
 
-    scene.input.on('dragend', function (pointer, gameObject, dropped) {
-      if (!dropped)
-      {
-        gameObject.x = gameObject.input.dragStartX;
-        gameObject.y = gameObject.input.dragStartY;
-      }
+    this.on('dragend', function (pointer) {
+
+      that.clearTint();
+
     });
   }
 }
