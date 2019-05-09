@@ -65,7 +65,7 @@ export class Tauler extends Phaser.GameObjects.Grid{
     //Funcio per colocar carta, retorna cert si l'ha pogut colocar
     this.colocarCarta = function(carta){
       //PREGUNTAR VECTOR
-      let mousePos = [that.scene.input.mousePointer.x, that.scene.input.mousePointer.y]
+      let mousePos = [that.scene.input.mousePointer.x, that.scene.input.mousePointer.y];
 
       if ( ! (mousePos[0] >= that.x - 150 && mousePos[0] <= that.x + 150 && mousePos[1] >= that.y - 150 && mousePos[1] <= that.y + 150)){
         return false;
