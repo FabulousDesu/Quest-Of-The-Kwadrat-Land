@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { Carta } from './Card.js';
+import { Deck } from './Deck.js';
 import { Globals } from './Globals.js';
 
 var graphics;
@@ -19,11 +20,19 @@ export default class FightScene extends Scene {
     this.tauler2 = this.add.image(200, 200, 'tauler');
     this.tauler2.setScale(3);
 
+    this.deck = new Deck(this);
     this.tauler = new Tauler(this, 200, 200);
     this.children.add(this.tauler);
-    this.ma = new Ma(this, 400, 500)
+    this.ma = new Ma(this, 400, 500);
     this.children.add(this.ma);
+    this.botoRobar = new BotoRobar(this, 750, 550, this.ma);
+    this.children.add(this.botoRobar);
+    this.botoFinal = new BotoFinalTurn(this, 750, 300);
+    this.children.add(this.botoFinal);
     this.children.add(new Enemy(this, 600, 200));
+
+    //Inicialitzar turn
+    this.ma.nouTurn();
   }
 
   update () {
@@ -32,7 +41,7 @@ export default class FightScene extends Scene {
   }
 }
 
-export class Enemy extends Phaser.GameObjects.Sprite{
+class Enemy extends Phaser.GameObjects.Sprite{
   constructor (scene, x, y) {
     super(scene, x, y, 'enemic');
     this.health = 20;
@@ -45,12 +54,9 @@ class Ma extends Phaser.GameObjects.Sprite{
   constructor (scene, x, y) {
     super(scene, x, y, 'bomb');
     this.scene = scene;
-    this.accions = 0;
+    this.accions = 4;
 
-    this.cartes = [new Carta(scene, 0, 0, 2, [[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,1,1,0]]),
-                   new Carta(scene, 0, 0, 3, [[0,0,1,0],[0,0,1,0],[0,1,1,0],[0,1,0,0]]),
-                   new Carta(scene, 0, 0, 4, [[0,1,1,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]]),
-                   new Carta(scene, 0, 0, 1, [[0,1,0,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]])];
+    this.cartes = [];
 
     this.cartes.forEach(function(element){
       scene.children.add(element);
@@ -65,19 +71,23 @@ class Ma extends Phaser.GameObjects.Sprite{
       })
     };
 
-    this.ordenarCartes();
-
-    this.afegirCartes = function(type, forma = [[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]]){
-      that.cartes.push(new Carta(that.scene, 0,0, type, forma));
+    this.robarCarta = function(){
+      that.cartes.push(that.scene.deck.robarCarta());
       that.scene.children.add(that.cartes[that.cartes.length-1]);
       that.ordenarCartes();
-    };
+    }
 
-    this.afegirCartes();
+    this.nouTurn = function(){
+      that.accions = 4
+      while(that.cartes.length < 4){
+        that.robarCarta();
+      }
+
+    }
   }
 }
 
-export class Tauler extends Phaser.GameObjects.Grid{
+class Tauler extends Phaser.GameObjects.Grid{
   constructor (scene, x, y){
     super(scene, x, y, 300, 300, 50, 50, 0x00b9f2).setAltFillStyle(0x016fce);
     this.mida = 6;
@@ -92,6 +102,7 @@ export class Tauler extends Phaser.GameObjects.Grid{
     //Buida = 0, Foc = 1, Gel = 2, Veri = 3 i Extra = 4
 
     this.valors = [0,0,0,0,0];
+    this.cartesUsades = [];
 
     this.scene = scene;
 
@@ -99,6 +110,10 @@ export class Tauler extends Phaser.GameObjects.Grid{
 
     //Funcio per colocar carta, retorna cert si l'ha pogut colocar
     this.colocarCarta = function(carta){
+      if (this.scene.ma.accions <= 0){
+        return false;
+      }
+
       //PREGUNTAR VECTOR
       let mousePos = [that.scene.input.mousePointer.x, that.scene.input.mousePointer.y];
 
@@ -145,6 +160,8 @@ export class Tauler extends Phaser.GameObjects.Grid{
       aux = that.scene.ma.cartes.indexOf(carta);
       that.scene.ma.cartes.splice(aux, 1);
       that.scene.ma.ordenarCartes();
+      that.cartesUsades.push(carta);
+      that.scene.ma.accions--;
       return true;
     }
 
@@ -152,6 +169,67 @@ export class Tauler extends Phaser.GameObjects.Grid{
       that.fitxesTauler.forEach(function(element){element.destroy()});
       that.fitxesTauler = [];
 
+      that.cartesUsades.forEach(function(element){
+        that.scene.deck.cartaUsada(element);
+      })
+
+      that.cartesUsades = [];
+      that.scene.deck.barrejar();
+      
+      for(let i = 0; i < 6; i++){
+        for(let j = 0; j < 6; j++){
+          that.matriu[j][i] = 0;
+        }
+      }
+
     }
+
+    this.finalTurn = function(){
+      let complet = true;
+      comprobarQuadratComplet:
+      for (let i = 1; i < 5; i++){
+        for (let j = 1; j < 5; j++){
+          if(that.matriu[j][i] == 0){
+            complet = false;
+            break comprobarQuadratComplet;
+          }
+        }
+      }
+      this.buidarTauler();
+      that.scene.ma.nouTurn();
+    }
+  }
+}
+
+class BotoRobar extends Phaser.GameObjects.Sprite{
+  constructor(scene, x, y, ma){
+    super(scene, x, y, 'boto_robar');
+
+    this.scene = scene;
+    this.ma = ma;
+    this.setInteractive();
+
+
+    var that = this;
+    this.on('pointerdown', function (event) {
+      if (that.ma.accions > 0 && that.ma.cartes.length < 7 && that.scene.deck.pucRobarCarta()){
+        that.ma.robarCarta();
+        that.ma.accions--;
+      }
+    }, this);
+  }
+
+
+}
+
+class BotoFinalTurn extends Phaser.GameObjects.Sprite{
+  constructor(scene, x, y){
+    super(scene, x, y, 'boto_final');
+    this.scene = scene;
+    var that = this;
+    this.setInteractive();
+    this.on('pointerdown', function (event) {
+      that.scene.tauler.finalTurn();
+    }, this);
   }
 }
