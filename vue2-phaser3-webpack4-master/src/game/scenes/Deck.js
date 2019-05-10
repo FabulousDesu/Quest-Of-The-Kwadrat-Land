@@ -6,7 +6,7 @@ export class Deck{
     this.scene = scene;
     this.cartes = [];
 
-    var that = this;
+    let that = this;
     //Crear copia deck globals
     Globals.deck.forEach(function(element){
       that.cartes.push(element);

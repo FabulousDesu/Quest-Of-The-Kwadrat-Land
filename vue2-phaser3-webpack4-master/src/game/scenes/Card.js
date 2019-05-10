@@ -13,7 +13,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
 
     const midaFitxa = 32;
 
-    var that = this;
+    let that = this;
     this.dibuixarPeces = function(escala, marcada = false){
       that.fitxa.forEach(function(element){element.destroy()});
       let offset = midaFitxa * escala;

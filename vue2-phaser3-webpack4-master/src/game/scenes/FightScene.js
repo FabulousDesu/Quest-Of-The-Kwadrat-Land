@@ -2,6 +2,7 @@ import { Scene } from 'phaser';
 import { Carta } from './Card.js';
 import { Deck } from './Deck.js';
 import { Globals } from './Globals.js';
+import { Hud } from './Hud.js'
 
 var graphics;
 var rect;
@@ -17,8 +18,6 @@ export default class FightScene extends Scene {
     rect = new Phaser.Geom.Rectangle(200, 500, 400, 100);
 
     //Tauler
-    this.tauler2 = this.add.image(200, 200, 'tauler');
-    this.tauler2.setScale(3);
 
     this.deck = new Deck(this);
     this.tauler = new Tauler(this, 200, 200);
@@ -29,7 +28,11 @@ export default class FightScene extends Scene {
     this.children.add(this.botoRobar);
     this.botoFinal = new BotoFinalTurn(this, 750, 300);
     this.children.add(this.botoFinal);
-    this.children.add(new Enemy(this, 600, 200));
+    this.enemic = new Enemy(this, 600, 200)
+    this.children.add(this.enemic);
+
+    this.hud = new Hud(this, 20, 500);
+    this.children.add(this.hud);
 
     //Inicialitzar turn
     this.ma.nouTurn();
@@ -44,9 +47,65 @@ export default class FightScene extends Scene {
 class Enemy extends Phaser.GameObjects.Sprite{
   constructor (scene, x, y) {
     super(scene, x, y, 'enemic');
-    this.health = 20;
-    this.shield = 0;
+    this.scene = scene;
+    this.vida = 20;
+    this.escut = 0;
     this.rang_accio = [[1, 5], [1, 5]] // 0 = Attack 1 = Shield
+
+    this.accioActual = [];
+
+    this.textVida = scene.add.text(x-20, y+50, '').setFontFamily('Arial').setFontSize(15).setColor('#ffff00');
+    this.textEscut = scene.add.text(x-20, y+75, '').setFontFamily('Arial').setFontSize(15).setColor('#ffff00');
+    this.textIntencio = scene.add.text(x-50, y-50, '').setFontFamily('Arial').setFontSize(15).setColor('#ffff00');
+    this.textVida.setDepth(1);
+    this.textEscut.setDepth(1);
+    this.textIntencio.setDepth(1);
+
+    let that = this;
+
+    this.crearAccio = function(){
+      that.accioActual[0] = Math.floor(Math.random() * (that.rang_accio[0][1] - that.rang_accio[0][0])) + that.rang_accio[0][0];
+      that.accioActual[1] = Math.floor(Math.random() * (that.rang_accio[1][1] - that.rang_accio[1][0])) + that.rang_accio[1][0];
+
+    }
+
+    this.updateCounters = function(){
+      that.textVida.text = 'Vida: ' + that.vida;
+      that.textEscut.text = 'Escut: ' + that.escut;
+      that.textIntencio.text = that.accioActual[0] + '/' + that.accioActual[1];
+
+    }
+
+    this.golpejat = function(valor){
+      that.escut -= valor;
+      if (that.escut < 0){
+        that.vida += that.escut;
+      }
+
+      that.escut = 0;
+
+      that.updateCounters();
+    }
+
+    this.executarAccio = function(){
+      that.escut += that.accioActual[1];
+      Globals.escut -= that.accioActual[0];
+      if (Globals.escut < 0){
+        Globals.vida += Globals.escut;
+        Globals.escut = 0;
+      }
+
+      that.updateCounters();
+      that.scene.hud.updateCounter();
+    }
+
+    this.nouTurn = function(){
+      that.crearAccio();
+      this.updateCounters();
+
+    }
+
+    this.nouTurn();
   }
 }
 
@@ -78,7 +137,9 @@ class Ma extends Phaser.GameObjects.Sprite{
     }
 
     this.nouTurn = function(){
-      that.accions = 4
+      that.accions = 4;
+      Globals.escut = 0;
+      that.scene.hud.updateCounter();
       while(that.cartes.length < 4){
         that.robarCarta();
       }
@@ -87,9 +148,9 @@ class Ma extends Phaser.GameObjects.Sprite{
   }
 }
 
-class Tauler extends Phaser.GameObjects.Grid{
-  constructor (scene, x, y){
-    super(scene, x, y, 300, 300, 50, 50, 0x00b9f2).setAltFillStyle(0x016fce);
+class Tauler extends Phaser.GameObjects.Sprite{
+  constructor (scene, x, y, ){
+    super(scene, x, y, 'tauler');
     this.mida = 6;
 
     this.fitxesTauler = [];
@@ -148,7 +209,9 @@ class Tauler extends Phaser.GameObjects.Grid{
       for (let i = -2; i < 2; i++){
         for (let j = -2; j < 2; j++){
           if (carta.val[j+2][i+2] != 0){
-            aux++;
+            if (!(casellaSeleccionada[1] + j == 0 || casellaSeleccionada[1] + j == 5 || casellaSeleccionada[0] + i == 0 || casellaSeleccionada[0] + i == 5)){
+              aux++;
+            }
             that.matriu[casellaSeleccionada[1] + j][casellaSeleccionada[0] + i] = carta.type;
             let sprite_aux = that.scene.add.sprite((casellaSeleccionada[0] + i)*50 + (that.x - 150 + 25) , (casellaSeleccionada[1] + j)*50 + (that.x - 150 + 25), 'fitxa', carta.type -1);
             sprite_aux.setScale(1.6);
@@ -173,9 +236,11 @@ class Tauler extends Phaser.GameObjects.Grid{
         that.scene.deck.cartaUsada(element);
       })
 
+      that.valors.forEach(function(element, index){ that.valors[index] = 0 });
+
       that.cartesUsades = [];
       that.scene.deck.barrejar();
-      
+
       for(let i = 0; i < 6; i++){
         for(let j = 0; j < 6; j++){
           that.matriu[j][i] = 0;
@@ -195,8 +260,29 @@ class Tauler extends Phaser.GameObjects.Grid{
           }
         }
       }
+
+      if (complet){
+        that.valors.forEach(function(element){ element *= 2; })
+      }
+
+      //Executar peces colocades
+      if (that.valors[1] >= 0){ //peces de foc
+        that.scene.enemic.golpejat(that.valors[1]);
+      }
+
+
+      if (that.valors[2] > 0){ //peces de gel
+        Globals.escut += that.valors[2];
+        that.scene.hud.updateCounter();
+      }
+
+
+      console.log(that.valors);
+      that.scene.enemic.executarAccio();
+
       this.buidarTauler();
       that.scene.ma.nouTurn();
+      that.scene.enemic.nouTurn();
     }
   }
 }
