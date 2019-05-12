@@ -50,6 +50,7 @@ class Enemy extends Phaser.GameObjects.Sprite{
     this.scene = scene;
     this.vida = 20;
     this.escut = 0;
+    this.veri = 0;
     this.rang_accio = [[1, 5], [1, 5]] // 0 = Attack 1 = Shield
 
     this.accioActual = [];
@@ -70,7 +71,7 @@ class Enemy extends Phaser.GameObjects.Sprite{
     }
 
     this.updateCounters = function(){
-      that.textVida.text = 'Vida: ' + that.vida;
+      that.textVida.text = 'Vida: ' + that.vida + ' (-' + that.veri + ')';
       that.textEscut.text = 'Escut: ' + that.escut;
       that.textIntencio.text = that.accioActual[0] + '/' + that.accioActual[1];
 
@@ -87,6 +88,10 @@ class Enemy extends Phaser.GameObjects.Sprite{
       that.updateCounters();
     }
 
+    this.enverinar = function(valor){
+      that.veri += Math.floor(valor/2);
+    }
+
     this.executarAccio = function(){
       that.escut += that.accioActual[1];
       Globals.escut -= that.accioActual[0];
@@ -99,9 +104,17 @@ class Enemy extends Phaser.GameObjects.Sprite{
       that.scene.hud.updateCounter();
     }
 
+    this.efecteVeri = function(){
+      that.vida -= that.veri;
+      that.veri--;
+    }
+
     this.nouTurn = function(){
       that.crearAccio();
-      this.updateCounters();
+      if (that.veri > 0){
+        that.efecteVeri();
+      }
+      that.updateCounters();
 
     }
 
@@ -262,7 +275,7 @@ class Tauler extends Phaser.GameObjects.Sprite{
       }
 
       if (complet){
-        that.valors.forEach(function(element){ element *= 2; })
+        that.valors.forEach(function(element, index){ that.valors[index] *= 2; })
       }
 
       //Executar peces colocades
@@ -274,6 +287,10 @@ class Tauler extends Phaser.GameObjects.Sprite{
       if (that.valors[2] > 0){ //peces de gel
         Globals.escut += that.valors[2];
         that.scene.hud.updateCounter();
+      }
+
+      if (that.valors[3] > 0){ //Peces de veri
+        that.scene.enemic.enverinar(that.valors[3]);
       }
 
 
