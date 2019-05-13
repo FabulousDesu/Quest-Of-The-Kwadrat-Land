@@ -15,13 +15,12 @@ export class Hud extends Phaser.GameObjects.Sprite{
     this.textEscut = scene.add.text(x+6,y+22.5,'').setFontFamily('Arial').setFontSize(15).setColor('#000000');
     this.textEscut.setDepth(1);
 
-    let that = this;
-    this.updateCounter = function(){
-      this.textVida.text = 'Vida: ' + Globals.vida + '/' + Globals.vidaMaxima;
-      this.textEscut.text = 'Escut: ' + Globals.escut;
-      this.textMonedes.text = 'Monedes: ' + Globals.monedes;
-    }
-
     this.updateCounter();
+  }
+
+  updateCounter(){
+    this.textVida.text = 'Vida: ' + Globals.vida + '/' + Globals.vidaMaxima;
+    this.textEscut.text = 'Escut: ' + Globals.escut;
+    this.textMonedes.text = 'Monedes: ' + Globals.monedes;
   }
 }

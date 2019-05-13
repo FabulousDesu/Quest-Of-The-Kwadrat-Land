@@ -12,43 +12,41 @@ export class Deck{
       that.cartes.push(element);
     })
 
-    this.barrejar = function(){
-      //barrejar cartes seguint algorisme de Fisher-Yates
-      var j, x, i;
-      for (i = that.cartes.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        x = that.cartes[i];
-        that.cartes[i] = that.cartes[j];
-        that.cartes[j] = x;
-      }
-
-    }
-
     this.barrejar();
+  }
 
-    this.pucRobarCarta = function(){
-      if (that.cartes.length == 0){
-        console.log("No pots robar, deck buit");
-        return false;
-      }else{
-        console.log("Pots robar");
-        return true;
-      }
+  barrejar(){
+    //barrejar cartes seguint algorisme de Fisher-Yates
+    var j, x, i;
+    for (i = this.cartes.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      x = this.cartes[i];
+      this.cartes[i] = this.cartes[j];
+      this.cartes[j] = x;
+    }
+  }
+
+  pucRobarCarta(){
+    if (this.cartes.length == 0){
+      console.log("No pots robar, deck buit");
+      return false;
+    }else{
+      console.log("Pots robar");
+      return true;
+    }
+  }
+
+  robarCarta(){
+    if (this.cartes.length == 0){
+      this.barrejar();
     }
 
-    this.robarCarta = function(){
-      if (that.cartes.length == 0){
-        that.barrejar();
-      }
+    let ret = this.cartes.pop();
+    //that.cartesUsades.push(ret);
+    return new Carta(this.scene, 0,0, ret.type, ret.forma);
+  }
 
-      let ret = that.cartes.pop();
-      //that.cartesUsades.push(ret);
-      return new Carta(that.scene, 0,0, ret.type, ret.forma);
-    }
-
-    this.cartaUsada = function(carta){
-      that.cartes.push({type: carta.type, forma: carta.val})
-
-    }
+  cartaUsada(carta){
+    this.cartes.push({type: carta.type, forma: carta.val})
   }
 }
