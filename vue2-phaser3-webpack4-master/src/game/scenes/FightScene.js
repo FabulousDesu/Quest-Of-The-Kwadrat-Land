@@ -7,9 +7,6 @@ import { Hud } from './Hud.js'
 var graphics;
 var rect;
 
-const UTIL = 0;
-const INUTIL = 1;
-
 const WAIT = 0;
 const ATC_FOC = 1;
 const DEF_GEL = 2;
@@ -37,15 +34,15 @@ export default class FightScene extends Scene {
     this.children.add(this.tauler);
     this.ma = new Ma(this, 400, 500);
     this.children.add(this.ma);
-    this.botoRobar = new BotoRobar(this, 750, 550, this.ma);
-    this.children.add(this.botoRobar);
-    this.botoFinal = new BotoFinalTurn(this, 750, 300);
-    this.children.add(this.botoFinal);
     this.enemic = new Enemy(this, 585, 220)
     this.children.add(this.enemic);
 
     this.hud = new Hud(this, 20, 500);
     this.children.add(this.hud);
+    this.botoRobar = new BotoRobar(this, 750, 525, this.ma);
+    this.children.add(this.botoRobar);
+    this.botoFinal = new BotoFinalTurn(this, 750, 400);
+    this.children.add(this.botoFinal);
 
     //Inicialitzar turn
     this.ma.nouTurn();
@@ -203,7 +200,11 @@ class Tauler extends Phaser.GameObjects.Sprite{
   constructor (scene, x, y, ){
     super(scene, x, y, 'tauler');
     this.mida = 6;
-    this.fitxesTauler = [[[],[],[],[],[]],[[],[],[],[],[]]]; //Sorry
+    //this.fitxesTauler = [[[],[],[],[],[]],[[],[],[],[],[]]];
+    this.fitxesTauler = {
+      util: [[],[],[],[],[]],
+      inutil: [[],[],[],[],[]]
+    }
     this.matriu = [[0,0,0,0,0,0],
                    [0,0,0,0,0,0],
                    [0,0,0,0,0,0],
@@ -385,17 +386,20 @@ class Tauler extends Phaser.GameObjects.Sprite{
       for (let j = -2; j < 2; j++){
         if (carta.val[j+2][i+2] != 0){
           let frame = carta.type - 1 + 4;
-          let util = INUTIL;
+          let util = false;
           if (!(casellaSeleccionada[1] + j == 0 || casellaSeleccionada[1] + j == 5 || casellaSeleccionada[0] + i == 0 || casellaSeleccionada[0] + i == 5)){
             aux++;
             frame -= 4;
-            util = UTIL;
+            util = true;
           }
 
           this.matriu[casellaSeleccionada[1] + j][casellaSeleccionada[0] + i] = carta.type;
           let sprite_aux = this.scene.add.sprite((casellaSeleccionada[0] + i)*50 + (this.x - 150 + 25) , (casellaSeleccionada[1] + j)*50 + (this.x - 150 + 25), 'fitxa', frame);
           sprite_aux.setScale(1.6);
-          this.fitxesTauler[util][carta.type].push(sprite_aux);
+          if (util)
+            this.fitxesTauler.util[carta.type].push(sprite_aux);
+          else
+            this.fitxesTauler.inutil[carta.type].push(sprite_aux);
         }
       }
     }
@@ -410,22 +414,22 @@ class Tauler extends Phaser.GameObjects.Sprite{
   }
 
   buidarFitxesTauler(value){
-    this.fitxesTauler[UTIL][value].forEach(function(element, index){
+    this.fitxesTauler.util[value].forEach(function(element, index){
       //this.fitxesTauler[UTIL][value][index.destroy();
       element.destroy();
     })
-    this.fitxesTauler[UTIL][value] = [];
+    this.fitxesTauler.util[value] = [];
   }
 
   buidarTauler(){
-    this.fitxesTauler[INUTIL].forEach(function(element, index){
+    this.fitxesTauler.inutil.forEach(function(element, index){
       //this.fitxesTauler[INUTIL][index].forEach(function(element, index2){
       element.forEach(function(element2, index2){
         //this.fitxesTauler[INUTIL][index][index2].destroy();
         element2.destroy();
       })
     })
-    this.fitxesTauler = [[[],[],[],[],[]],[[],[],[],[],[]]];
+    this.fitxesTauler.inutil = [[],[],[],[],[]];
 
     let that = this;
     this.cartesUsades.forEach(function(element){
@@ -471,13 +475,23 @@ class Tauler extends Phaser.GameObjects.Sprite{
 class BotoRobar extends Phaser.GameObjects.Sprite{
   constructor(scene, x, y, ma){
     super(scene, x, y, 'boto_robar');
+    this.setScale(2);
 
     this.scene = scene;
     this.ma = ma;
     this.setInteractive();
+      this.setFrame(0);
 
 
     var that = this;
+    this.on('pointerover', function () {
+        that.setFrame(1);
+    });
+
+    this.on('pointerout', function () {
+      that.setFrame(0);
+    });
+
     this.on('pointerdown', function (event) {
       if (that.ma.accions > 0 && that.ma.cartes.length < 7 && that.scene.deck.pucRobarCarta()){
         that.ma.robarCarta();
@@ -492,9 +506,19 @@ class BotoRobar extends Phaser.GameObjects.Sprite{
 class BotoFinalTurn extends Phaser.GameObjects.Sprite{
   constructor(scene, x, y){
     super(scene, x, y, 'boto_final');
+    this.setScale(2);
     this.scene = scene;
     var that = this;
     this.setInteractive();
+
+    this.on('pointerover', function () {
+        that.setFrame(1);
+    });
+
+    this.on('pointerout', function () {
+      that.setFrame(0);
+    });
+
     this.on('pointerdown', function (event) {
       that.scene.tauler.finalTurn();
     }, this);

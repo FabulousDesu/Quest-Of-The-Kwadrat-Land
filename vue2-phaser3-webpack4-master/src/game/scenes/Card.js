@@ -17,7 +17,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
     let that = this;
 
 
-    this.dibuixarPeces(0.5);
+    this.dibuixarPeces(0.4);
 
     //Fer que sigui setDraggable
     this.setInteractive();
@@ -26,12 +26,12 @@ export class Carta extends Phaser.GameObjects.Sprite{
     this.lastPos = [this.x, this.y];
     this.on('pointerover', function () {
         that.setScale(1.5);
-        that.dibuixarPeces(0.75);
+        that.dibuixarPeces(0.7);
     });
 
     this.on('pointerout', function () {
       this.setScale(1);
-      that.dibuixarPeces(0.5);
+      that.dibuixarPeces(0.4);
     });
 
     this.on('dragstart', function (pointer) {
@@ -55,7 +55,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
 
     this.on('dragend', function (pointer) {
       that.setVisible(true);
-      that.dibuixarPeces(0.5);
+      that.dibuixarPeces(0.4);
       if(that.scene.tauler.colocarCarta(that)){
         //that.fitxa.forEach(function(element){element.destroy()});
         that.fitxa.forEach(function(element, index){that.fitxa[index].destroy()});
@@ -63,7 +63,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
       }else{
         that.x = that.inicialPos[0];
         that.y = that.inicialPos[1];
-        that.dibuixarPeces(0.5);
+        that.dibuixarPeces(0.4);
         that.fitxa.forEach(function(element, index){that.fitxa[index].setDepth(1)});
       }
     });
