@@ -7,12 +7,12 @@ export class Hud extends Phaser.GameObjects.Sprite{
     this.scene = scene;
     this.setDepth(0);
 
-    this.textVida = scene.add.text(x+6,y+5,'').setFontFamily('Arial').setFontSize(15).setColor('#ffff00');
+    this.textVida = scene.add.text(x+6,y+5,'').setFontFamily('Arial').setFontSize(15).setColor('#000000');
     this.textVida.setDepth(1);
-    this.textMonedes = scene.add.text(x+6,y+40,'').setFontFamily('Arial').setFontSize(15).setColor('#ffff00');
+    this.textMonedes = scene.add.text(x+6,y+40,'').setFontFamily('Arial').setFontSize(15).setColor('#000000');
     this.textMonedes.setDepth(1);
 
-    this.textEscut = scene.add.text(x+6,y+22.5,'').setFontFamily('Arial').setFontSize(15).setColor('#ffff00');
+    this.textEscut = scene.add.text(x+6,y+22.5,'').setFontFamily('Arial').setFontSize(15).setColor('#000000');
     this.textEscut.setDepth(1);
 
     let that = this;

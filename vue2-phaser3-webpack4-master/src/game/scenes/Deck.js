@@ -24,6 +24,8 @@ export class Deck{
 
     }
 
+    this.barrejar();
+
     this.pucRobarCarta = function(){
       if (that.cartes.length == 0){
         console.log("No pots robar, deck buit");

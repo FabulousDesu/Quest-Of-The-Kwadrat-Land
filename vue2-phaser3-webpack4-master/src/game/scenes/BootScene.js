@@ -8,6 +8,8 @@ import base_fitxa from '@/game/assets/fitxes/fitxe_quadrat.png';
 import boto_robar from '@/game/assets/boto_robarCarta.png';
 import boto_finalitzar from '@/game/assets/boto_finalTurn.png';
 import hud from '@/game/assets/hud.png'
+import accio from '@/game/assets/accio.png';
+import fonsCombat from '@/game/assets/fonsCombat.png';
 
 export default class BootScene extends Scene {
     constructor() {
@@ -23,11 +25,14 @@ export default class BootScene extends Scene {
         this.load.image('boto_robar', boto_robar);
         this.load.image('boto_final', boto_finalitzar);
         this.load.image('hud', hud);
+        this.load.image('accio', accio);
+        this.load.image('fons', fonsCombat);
         this.load.spritesheet('fitxa', base_fitxa, { frameWidth: 32, frameHeight: 32 });
         // this.load.audio('thud', ['assets/thud.mp3', 'assets/thud.ogg'])
     }
 
     create() {
+
         this.scene.start('FightScene')
     }
 }
