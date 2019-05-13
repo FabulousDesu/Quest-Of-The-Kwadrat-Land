@@ -73,8 +73,8 @@ export class Carta extends Phaser.GameObjects.Sprite{
   desplacarA(novaPos) {
     this.inicialPos[0] = novaPos[0];
     this.inicialPos[1] = novaPos[1];
-    this.x = that.inicialPos[0];
-    this.y = that.inicialPos[1];
+    this.x = this.inicialPos[0];
+    this.y = this.inicialPos[1];
     this.dibuixarPeces(0.5);
   }
 
@@ -104,14 +104,6 @@ export class Carta extends Phaser.GameObjects.Sprite{
 
   getMatriuPeca(){
     return this.val;
-  }
-
-  desplacarA(novaPos){
-    this.inicialPos[0] = novaPos[0];
-    this.inicialPos[1] = novaPos[1];
-    this.x = this.inicialPos[0];
-    this.y = this.inicialPos[1];
-    this.dibuixarPeces(0.5);
   }
 
 }

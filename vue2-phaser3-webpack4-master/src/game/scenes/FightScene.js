@@ -80,62 +80,61 @@ class Enemy extends Phaser.GameObjects.Sprite{
     this.textEscut.setDepth(1);
     this.textIntencio.setDepth(1);
 
-    let that = this;
-
-    this.crearAccio = function(){
-      that.accioActual[0] = Math.floor(Math.random() * (that.rang_accio[0][1] - that.rang_accio[0][0])) + that.rang_accio[0][0];
-      that.accioActual[1] = Math.floor(Math.random() * (that.rang_accio[1][1] - that.rang_accio[1][0])) + that.rang_accio[1][0];
-
-    }
-
-    this.updateCounters = function(){
-      that.textVida.setText('Vida: ' + that.vida + ' (-' + that.veri + ')');
-      that.textEscut.setText('Escut: ' + that.escut);
-      that.textIntencio.setText(that.accioActual[0] + '/' + that.accioActual[1]);
-    }
-
-    this.golpejat = function(valor){
-      that.escut -= valor;
-      if (that.escut < 0){
-        that.vida += that.escut;
-        that.escut = 0;
-      }
-
-      that.updateCounters();
-    }
-
-    this.enverinar = function(valor){
-      that.veri += Math.floor(valor/2);
-      that.updateCounters();
-    }
-
-    this.executarAccio = function(){
-      that.escut = 0;
-      that.escut += that.accioActual[1];
-      Globals.escut -= that.accioActual[0];
-      if (Globals.escut < 0){
-        Globals.vida += Globals.escut;
-        Globals.escut = 0;
-      }
-
-      that.updateCounters();
-      that.scene.hud.updateCounter();
-    }
-
-    this.efecteVeri = function(){
-      that.vida -= that.veri;
-      that.veri--;
-    }
-
-    this.nouTurn = function(){
-      that.crearAccio();
-      if (that.veri > 0){
-        that.efecteVeri();
-      }
-      that.updateCounters();
-    }
-
     this.nouTurn();
+  }
+
+  crearAccio(){
+    this.accioActual[0] = Math.floor(Math.random() * (this.rang_accio[0][1] - this.rang_accio[0][0])) + this.rang_accio[0][0];
+    this.accioActual[1] = Math.floor(Math.random() * (this.rang_accio[1][1] - this.rang_accio[1][0])) + this.rang_accio[1][0];
+
+  }
+
+  updateCounters(){
+    this.textVida.setText('Vida: ' + this.vida + ' (-' + this.veri + ')');
+    this.textEscut.setText('Escut: ' + this.escut);
+    this.textIntencio.setText(this.accioActual[0] + '/' + this.accioActual[1]);
+  }
+
+  golpejat(valor){
+    this.escut -= valor;
+    if (this.escut < 0){
+      this.vida += this.escut;
+      this.escut = 0;
+    }
+
+    this.updateCounters();
+  }
+
+  enverinar(valor){
+    this.veri += Math.floor(valor/2);
+    this.updateCounters();
+  }
+
+  executarAccio(){
+    if (this.veri > 0){
+      this.efecteVeri();
+    }
+
+    this.escut = 0;
+    this.escut += this.accioActual[1];
+    Globals.escut -= this.accioActual[0];
+    if (Globals.escut < 0){
+      Globals.vida += Globals.escut;
+      Globals.escut = 0;
+    }
+
+    this.updateCounters();
+    this.scene.hud.updateCounter();
+  }
+
+  efecteVeri(){
+    this.vida -= this.veri;
+    this.veri--;
+  }
+
+  nouTurn(){
+    this.crearAccio();
+    this.updateCounters();
   }
 }
 
@@ -178,7 +177,7 @@ class Ma extends Phaser.GameObjects.Sprite{
       let aux = 0;
       let mida = that.cartes.length;
       that.cartes.forEach(function(element, index){
-        element.desplacarA([that.x + (index + 0.5 - mida/2) * 75, that.y]);
+        element.desplacarA([that.x + (index + 0.5 - mida/2) * 82, that.y]);
       })
     };
 
