@@ -36,9 +36,13 @@ export default class FightScene extends Scene {
 
     //Inicialitzar turn
     this.ma.nouTurn();
+    //this.text = this.add.text(300, 300, '').setFontFamily('Arial').setFontSize(15).setColor('#ffffff');
+    //this.count = 0;
   }
 
   update () {
+    //this.count++;
+    //this.text.setText("Counter: " + this.count);
     graphics.clear();
     graphics.strokeRectShape(rect);
   }
@@ -71,28 +75,29 @@ class Enemy extends Phaser.GameObjects.Sprite{
     }
 
     this.updateCounters = function(){
-      that.textVida.text = 'Vida: ' + that.vida + ' (-' + that.veri + ')';
-      that.textEscut.text = 'Escut: ' + that.escut;
-      that.textIntencio.text = that.accioActual[0] + '/' + that.accioActual[1];
-
+      that.textVida.setText('Vida: ' + that.vida + ' (-' + that.veri + ')');
+      that.textEscut.setText('Escut: ' + that.escut);
+      that.textIntencio.setText(that.accioActual[0] + '/' + that.accioActual[1]);
+      that.scene.update();
     }
 
     this.golpejat = function(valor){
       that.escut -= valor;
       if (that.escut < 0){
         that.vida += that.escut;
+        that.escut = 0;
       }
-
-      that.escut = 0;
 
       that.updateCounters();
     }
 
     this.enverinar = function(valor){
       that.veri += Math.floor(valor/2);
+      that.updateCounters();
     }
 
     this.executarAccio = function(){
+      that.escut = 0;
       that.escut += that.accioActual[1];
       Globals.escut -= that.accioActual[0];
       if (Globals.escut < 0){
@@ -115,11 +120,15 @@ class Enemy extends Phaser.GameObjects.Sprite{
         that.efecteVeri();
       }
       that.updateCounters();
-
     }
 
     this.nouTurn();
   }
+
+  update (){
+    this.updateCounters();
+  }
+
 }
 
 class Ma extends Phaser.GameObjects.Sprite{
@@ -182,7 +191,16 @@ class Tauler extends Phaser.GameObjects.Sprite{
 
     let that = this;
 
-    //Funcio per colocar carta, retorna cert si l'ha pogut colocar
+    //Funcio per colocar carta, retorna cert si l'ha pogut colocar4
+    this.wait = function(ms){
+      let start = new Date().getTime();
+      while(true){
+        if ((new Date().getTime() - start) > ms){
+          break;
+        }
+      }
+    }
+
     this.colocarCarta = function(carta){
       if (this.scene.ma.accions <= 0){
         return false;
@@ -279,24 +297,32 @@ class Tauler extends Phaser.GameObjects.Sprite{
       }
 
       //Executar peces colocades
+      that.wait(1000);
+      console.log("Atac Foc");
       if (that.valors[1] >= 0){ //peces de foc
         that.scene.enemic.golpejat(that.valors[1]);
+        that.wait(3000);
       }
 
-
+      console.log("Defensa Gel");
       if (that.valors[2] > 0){ //peces de gel
         Globals.escut += that.valors[2];
+        console.log(Globals.escut);
         that.scene.hud.updateCounter();
+        that.wait(1000);
       }
 
+      console.log("enverinar");
       if (that.valors[3] > 0){ //Peces de veri
         that.scene.enemic.enverinar(that.valors[3]);
+        that.wait(1000);
       }
 
-
-      console.log(that.valors);
+      console.log("Enemic");
       that.scene.enemic.executarAccio();
+      that.wait(1000);
 
+      console.log("nouTurn");
       this.buidarTauler();
       that.scene.ma.nouTurn();
       that.scene.enemic.nouTurn();
