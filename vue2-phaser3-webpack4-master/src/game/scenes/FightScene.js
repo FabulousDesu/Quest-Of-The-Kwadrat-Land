@@ -217,131 +217,12 @@ class Tauler extends Phaser.GameObjects.Sprite{
 
     this.scene = scene;
 
-    let that = this;
-
     //Funcio per colocar carta, retorna cert si l'ha pogut colocar4
-
-    this.colocarCarta = function(carta){
-      if (this.scene.ma.accions <= 0){
-        return false;
-      }
-
-      //PREGUNTAR VECTOR
-      let mousePos = [that.scene.input.mousePointer.x, that.scene.input.mousePointer.y];
-
-      if ( ! (mousePos[0] >= that.x - 150 && mousePos[0] <= that.x + 150 && mousePos[1] >= that.y - 150 && mousePos[1] <= that.y + 150)){
-        return false;
-      }
-
-      let nou_mouse = [mousePos[0] - (that.x - 150), mousePos[1] - (that.y - 150)]
-      let casellaSeleccionada = [Math.trunc(nou_mouse[0]/50), Math.trunc(nou_mouse[1]/50)];
-
-      //Comprobar que cap
-      for (let i = -2; i < 2; i++){
-        for (let j = -2; j < 2; j++){
-          //Existeix la peca
-          if (carta.val[j+2][i+2] != 0){
-
-            //La peca cap dintre els bordes
-            if (casellaSeleccionada[0] + i < 0 || casellaSeleccionada[0] + i >= 6 || casellaSeleccionada[1] + j < 0 || casellaSeleccionada[1] + j >= 6){
-              return false;
-            }
-
-            //La pos no esta ocupada
-            if (that.matriu[casellaSeleccionada[1] + j][casellaSeleccionada[0] + i] != 0){
-              return false;
-            }
-          }
-        }
-      }
-
-      //Colocar Peca
-      let aux = 0;
-      for (let i = -2; i < 2; i++){
-        for (let j = -2; j < 2; j++){
-          if (carta.val[j+2][i+2] != 0){
-            let frame = carta.type - 1 + 4;
-            let util = INUTIL;
-            if (!(casellaSeleccionada[1] + j == 0 || casellaSeleccionada[1] + j == 5 || casellaSeleccionada[0] + i == 0 || casellaSeleccionada[0] + i == 5)){
-              aux++;
-              frame -= 4;
-              util = UTIL;
-            }
-
-            that.matriu[casellaSeleccionada[1] + j][casellaSeleccionada[0] + i] = carta.type;
-            let sprite_aux = that.scene.add.sprite((casellaSeleccionada[0] + i)*50 + (that.x - 150 + 25) , (casellaSeleccionada[1] + j)*50 + (that.x - 150 + 25), 'fitxa', frame);
-            sprite_aux.setScale(1.6);
-            that.fitxesTauler[util][carta.type].push(sprite_aux);
-          }
-        }
-      }
-
-      that.valors[carta.type] += aux;
-      aux = that.scene.ma.cartes.indexOf(carta);
-      that.scene.ma.cartes.splice(aux, 1);
-      that.scene.ma.ordenarCartes();
-      that.cartesUsades.push(carta);
-      this.scene.ma.dibuixarAccions(that.scene.ma.accions-1);
-      return true;
-    }
-
-    this.buidarFitxesTauler = function(value){
-      that.fitxesTauler[UTIL][value].forEach(function(element, index){
-        that.fitxesTauler[UTIL][value][index].destroy();
-      })
-      that.fitxesTauler[UTIL][value] = [];
-    }
-
-    this.buidarTauler = function(){
-      that.fitxesTauler[INUTIL].forEach(function(element, index){
-        that.fitxesTauler[INUTIL][index].forEach(function(element, index2){
-          that.fitxesTauler[INUTIL][index][index2].destroy();
-        })
-      })
-      that.fitxesTauler = [[[],[],[],[],[]],[[],[],[],[],[]]];
-
-      that.cartesUsades.forEach(function(element){
-        that.scene.deck.cartaUsada(element);
-      })
-
-      that.valors.forEach(function(element, index){ that.valors[index] = 0 });
-
-      that.cartesUsades = [];
-      that.scene.deck.barrejar();
-
-      for(let i = 0; i < 6; i++){
-        for(let j = 0; j < 6; j++){
-          that.matriu[j][i] = 0;
-        }
-      }
-
-    }
-
-    this.finalTurn = function(){
-      let complet = true;
-      comprobarQuadratComplet:
-      for (let i = 1; i < 5; i++){
-        for (let j = 1; j < 5; j++){
-          if(that.matriu[j][i] == 0){
-            complet = false;
-            break comprobarQuadratComplet;
-          }
-        }
-      }
-
-      if (complet){
-        that.valors.forEach(function(element, index){ that.valors[index] *= 2; })
-      }
-
-      that.estat = ATC_FOC;
-    }
-
     this.estat = WAIT;
     this.executatUnCop = false;
     this.temps = 0;
     this.tempsEspera = 0;
   }
-
 
   update(){
     if (this.estat == WAIT){
@@ -462,6 +343,127 @@ class Tauler extends Phaser.GameObjects.Sprite{
         this.executatUnCop = false;
       }
     }
+  }
+
+  colocarCarta(carta){
+    if (this.scene.ma.accions <= 0){
+      return false;
+    }
+
+    //PREGUNTAR VECTOR
+    let mousePos = [this.scene.input.mousePointer.x, this.scene.input.mousePointer.y];
+
+    if ( ! (mousePos[0] >= this.x - 150 && mousePos[0] <= this.x + 150 && mousePos[1] >= this.y - 150 && mousePos[1] <= this.y + 150)){
+      return false;
+    }
+
+    let nou_mouse = [mousePos[0] - (this.x - 150), mousePos[1] - (this.y - 150)]
+    let casellaSeleccionada = [Math.trunc(nou_mouse[0]/50), Math.trunc(nou_mouse[1]/50)];
+
+    //Comprobar que cap
+    for (let i = -2; i < 2; i++){
+      for (let j = -2; j < 2; j++){
+        //Existeix la peca
+        if (carta.val[j+2][i+2] != 0){
+
+          //La peca cap dintre els bordes
+          if (casellaSeleccionada[0] + i < 0 || casellaSeleccionada[0] + i >= 6 || casellaSeleccionada[1] + j < 0 || casellaSeleccionada[1] + j >= 6){
+            return false;
+          }
+
+          //La pos no esta ocupada
+          if (this.matriu[casellaSeleccionada[1] + j][casellaSeleccionada[0] + i] != 0){
+            return false;
+          }
+        }
+      }
+    }
+
+    //Colocar Peca
+    let aux = 0;
+    for (let i = -2; i < 2; i++){
+      for (let j = -2; j < 2; j++){
+        if (carta.val[j+2][i+2] != 0){
+          let frame = carta.type - 1 + 4;
+          let util = INUTIL;
+          if (!(casellaSeleccionada[1] + j == 0 || casellaSeleccionada[1] + j == 5 || casellaSeleccionada[0] + i == 0 || casellaSeleccionada[0] + i == 5)){
+            aux++;
+            frame -= 4;
+            util = UTIL;
+          }
+
+          this.matriu[casellaSeleccionada[1] + j][casellaSeleccionada[0] + i] = carta.type;
+          let sprite_aux = this.scene.add.sprite((casellaSeleccionada[0] + i)*50 + (this.x - 150 + 25) , (casellaSeleccionada[1] + j)*50 + (this.x - 150 + 25), 'fitxa', frame);
+          sprite_aux.setScale(1.6);
+          this.fitxesTauler[util][carta.type].push(sprite_aux);
+        }
+      }
+    }
+
+    this.valors[carta.type] += aux;
+    aux = this.scene.ma.cartes.indexOf(carta);
+    this.scene.ma.cartes.splice(aux, 1);
+    this.scene.ma.ordenarCartes();
+    this.cartesUsades.push(carta);
+    this.scene.ma.dibuixarAccions(this.scene.ma.accions-1);
+    return true;
+  }
+
+  buidarFitxesTauler(value){
+    this.fitxesTauler[UTIL][value].forEach(function(element, index){
+      //this.fitxesTauler[UTIL][value][index.destroy();
+      element.destroy();
+    })
+    this.fitxesTauler[UTIL][value] = [];
+  }
+
+  buidarTauler(){
+    this.fitxesTauler[INUTIL].forEach(function(element, index){
+      //this.fitxesTauler[INUTIL][index].forEach(function(element, index2){
+      element.forEach(function(element2, index2){
+        //this.fitxesTauler[INUTIL][index][index2].destroy();
+        element2.destroy();
+      })
+    })
+    this.fitxesTauler = [[[],[],[],[],[]],[[],[],[],[],[]]];
+
+    let that = this;
+    this.cartesUsades.forEach(function(element){
+      that.scene.deck.cartaUsada(element);
+    })
+
+    this.valors.forEach(function(element, index){ that.valors[index] = 0 });
+    this.cartesUsades = [];
+
+    this.scene.deck.barrejar();
+
+    for(let i = 0; i < 6; i++){
+      for(let j = 0; j < 6; j++){
+        this.matriu[j][i] = 0;
+      }
+    }
+
+  }
+
+  finalTurn(){
+    let complet = true;
+    comprobarQuadratComplet:
+    for (let i = 1; i < 5; i++){
+      for (let j = 1; j < 5; j++){
+        if(this.matriu[j][i] == 0){
+          complet = false;
+          break comprobarQuadratComplet;
+        }
+      }
+    }
+
+
+    if (complet){
+      let that = this;
+      this.valors.forEach(function(element, index){ that.valors[index] *= 2; })
+    }
+
+    this.estat = ATC_FOC;
   }
 
 }
