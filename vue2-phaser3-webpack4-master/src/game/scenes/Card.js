@@ -3,6 +3,7 @@ import { Globals } from './Globals.js';
 const midaFitxa = 32;
 
 export class Carta extends Phaser.GameObjects.Sprite{
+  //Classe per crear una carta del joc
   constructor(scene, x, y, type, forma = [[0,0,0,0],[0,0,0,0],[0,0,1,0],[0,0,0,0]]){
     super(scene, x, y, 'carta');
 
@@ -19,7 +20,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
 
     this.dibuixarPeces(0.4);
 
-    //Fer que sigui setDraggable
+    //Fer que sigui draggable 
     this.setInteractive();
     scene.input.setDraggable(this);
 
@@ -71,6 +72,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
   }
 
   desplacarA(novaPos) {
+    //Pre:-- Post: Desplaca la carta a la nova pos <novaPos>
     this.inicialPos[0] = novaPos[0];
     this.inicialPos[1] = novaPos[1];
     this.x = this.inicialPos[0];
@@ -79,6 +81,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
   }
 
   dibuixarPeces(escala, depth = 1, marcada = false){
+    //Pre:-- Post: Dibuixada la peca que te aquesta carta
     let that = this;
     this.fitxa.forEach(function(element, index){that.fitxa[index].destroy()});
     this.fitxa = [];
@@ -103,6 +106,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
   }
 
   getMatriuPeca(){
+    //Pre:-- Post: Retornada la matriu de la peca
     return this.val;
   }
 

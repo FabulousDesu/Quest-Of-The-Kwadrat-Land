@@ -4,9 +4,7 @@ import { Deck } from './Deck.js';
 import { Globals } from './Globals.js';
 import { Hud } from './Hud.js'
 
-var graphics;
-var rect;
-
+//CONSTANTS
 const WAIT = 0;
 const ATC_FOC = 1;
 const DEF_GEL = 2;
@@ -17,17 +15,12 @@ const NOU_TORN = 6;
 const EXTRA = 7;
 
 export default class FightScene extends Scene {
+  //CLASSE PRINCIPAL
   constructor () {
     super({ key: 'FightScene' });
   }
 
   create () {
-    //Zones
-    graphics = this.add.graphics({ lineStyle: { width: 2, color: 0x0000aa }, fillStyle: { color: 0xaa0000 }});
-    rect = new Phaser.Geom.Rectangle(200, 500, 400, 100);
-
-    //Tauler
-
     this.add.image(0,0, 'fons').setOrigin(0,0);
     this.deck = new Deck(this);
     this.tauler = new Tauler(this, 200, 200);
@@ -37,7 +30,7 @@ export default class FightScene extends Scene {
     this.enemic = new Enemy(this, 585, 220)
     this.children.add(this.enemic);
 
-    this.hud = new Hud(this, 20, 500);
+    this.hud = new Hud(this, 40, 500);
     this.children.add(this.hud);
     this.botoRobar = new BotoRobar(this, 750, 525, this.ma);
     this.children.add(this.botoRobar);
@@ -45,21 +38,18 @@ export default class FightScene extends Scene {
     this.children.add(this.botoFinal);
 
     //Inicialitzar turn
-    this.ma.nouTurn();
+    this.ma.nouTorn();
     this.text = this.add.text(400, 300, "").setFontFamily('Arial').setFontSize(50).setColor('#ffffff');
 
   }
 
   update () {
-    //this.count++;
-    //this.text.setText("Counter: " + this.count);
     this.tauler.update();
-    graphics.clear();
-    graphics.strokeRectShape(rect);
   }
 }
 
 class Enemy extends Phaser.GameObjects.Sprite{
+  //Enemic del jugador
   constructor (scene, x, y) {
     super(scene, x, y, 'enemic').setScale(2);
     this.scene = scene;
@@ -70,29 +60,39 @@ class Enemy extends Phaser.GameObjects.Sprite{
 
     this.accioActual = [];
 
-    this.textVida = scene.add.text(x-20, y+50, '').setFontFamily('Arial').setFontSize(20).setColor('#000000');
-    this.textEscut = scene.add.text(x-20, y+75, '').setFontFamily('Arial').setFontSize(20).setColor('#000000');
-    this.textIntencio = scene.add.text(x-50, y-75, '').setFontFamily('Arial').setFontSize(20).setColor('#000000');
+    this.textVida = scene.add.text(x-20, y+50, '').setFontFamily('Arial').setFontSize(20).setColor('#ffffff').setStroke('#000000', 7);
+    this.textEscut = scene.add.text(x-20, y+75, '').setFontFamily('Arial').setFontSize(20).setColor('#ffffff').setStroke('#000000', 7);
+    this.textIntencio = scene.add.text(x-50, y-75, '').setFontFamily('Arial').setFontSize(20).setColor('#ffffff').setStroke('#000000', 7);
     this.textVida.setDepth(1);
     this.textEscut.setDepth(1);
     this.textIntencio.setDepth(1);
 
-    this.nouTurn();
+    this.nouTorn();
   }
 
   crearAccio(){
+    //Pre:-- Post: L'enemic ha decidit que fer en el seu torn
     this.accioActual[0] = Math.floor(Math.random() * (this.rang_accio[0][1] - this.rang_accio[0][0])) + this.rang_accio[0][0];
     this.accioActual[1] = Math.floor(Math.random() * (this.rang_accio[1][1] - this.rang_accio[1][0])) + this.rang_accio[1][0];
 
   }
 
   updateCounters(){
+    //Pre:-- Post: Actualitzats els texts de l'enemic
     this.textVida.setText('Vida: ' + this.vida + ' (-' + this.veri + ')');
     this.textEscut.setText('Escut: ' + this.escut);
     this.textIntencio.setText(this.accioActual[0] + '/' + this.accioActual[1]);
   }
 
+  heMort(){
+    //Pre:-- Post: Executada l'accio morir si l'enemic ha mort
+    if (this.vida <= 0){
+      console.log("ENEMIC MORT"); //----------------------------------------------------------------------
+    }
+  }
+
   golpejat(valor){
+    //Pre:-- Post: L'enemic ha sigut golpejat per un atac de dany <valor>
     this.escut -= valor;
     if (this.escut < 0){
       this.vida += this.escut;
@@ -100,14 +100,18 @@ class Enemy extends Phaser.GameObjects.Sprite{
     }
 
     this.updateCounters();
+    this.heMort();
   }
 
   enverinar(valor){
+    //Pre:-- Post: L'enemic ha estat enverinat per un veri de poder <valor>
     this.veri += Math.floor(valor/2);
     this.updateCounters();
+    this.heMort();
   }
 
   executarAccio(){
+    //Pre:-- Post: L'enemic ha atacat el jugador i s'ha posat escut
     if (this.veri > 0){
       this.efecteVeri();
     }
@@ -122,20 +126,28 @@ class Enemy extends Phaser.GameObjects.Sprite{
 
     this.updateCounters();
     this.scene.hud.updateCounter();
+
+    if(Globals.vida <= 0){
+      console.log("MORT") //----------------------------------------------------------------------
+    }
+
   }
 
   efecteVeri(){
+    //Pre:-- Post: L'enemic ha rebut l'efecte del veri
     this.vida -= this.veri;
     this.veri--;
   }
 
-  nouTurn(){
+  nouTorn(){
+    //Pre:-- Post:Nou torn de l'enemic creat
     this.crearAccio();
     this.updateCounters();
   }
 }
 
 class Ma extends Phaser.GameObjects.Sprite{
+  //Ma de cartes del jugador
   constructor (scene, x, y) {
     super(scene, x, y, 'bomb');
     this.scene = scene;
@@ -149,6 +161,7 @@ class Ma extends Phaser.GameObjects.Sprite{
   }
 
   dibuixarAccions(value){
+    //Pre:-- Post: Accions que li queden al jugador dibuixades per pantalla
     if (value < this.accions){
       while(value < this.accions){
         this.accionsSprite[this.accionsSprite.length-1].destroy();
@@ -170,6 +183,7 @@ class Ma extends Phaser.GameObjects.Sprite{
   }
 
   ordenarCartes(){
+    //Pre:-- Post: Colocades les cartes de Ma de manera organitzada
     let aux = 0;
     let mida = this.cartes.length;
     let that = this;
@@ -179,12 +193,14 @@ class Ma extends Phaser.GameObjects.Sprite{
   };
 
   robarCarta(){
+    //Pre:-- Post: La ma ha extret una carta de deck i l'ha afegit
     this.cartes.push(this.scene.deck.robarCarta());
     this.scene.children.add(this.cartes[this.cartes.length-1]);
     this.ordenarCartes();
   }
 
-  nouTurn(){
+  nouTorn(){
+    //Pre:-- Post:Nou torn del jugador creat
     this.dibuixarAccions(4)
     this.accions = 4;
     Globals.escut = 0;
@@ -197,6 +213,7 @@ class Ma extends Phaser.GameObjects.Sprite{
 }
 
 class Tauler extends Phaser.GameObjects.Sprite{
+  //Tauler que apareix per pantalla
   constructor (scene, x, y, ){
     super(scene, x, y, 'tauler');
     this.mida = 6;
@@ -331,8 +348,8 @@ class Tauler extends Phaser.GameObjects.Sprite{
         this.temps = new Date();
         this.executatUnCop = true;
 
-        this.scene.ma.nouTurn();
-        this.scene.enemic.nouTurn();
+        this.scene.ma.nouTorn();
+        this.scene.enemic.nouTorn();
         this.executatUnCop = true;
         this.scene.text.setText("NOU TORN");
 
@@ -347,6 +364,7 @@ class Tauler extends Phaser.GameObjects.Sprite{
   }
 
   colocarCarta(carta){
+    //Pre:-- Post: Si es pot carta colocada en el tauler
     if (this.scene.ma.accions <= 0){
       return false;
     }
@@ -414,6 +432,7 @@ class Tauler extends Phaser.GameObjects.Sprite{
   }
 
   buidarFitxesTauler(value){
+    //Pre: 0 <= value < 5 Post: Esborrades les peces utils del tauler de tipus <value>
     this.fitxesTauler.util[value].forEach(function(element, index){
       //this.fitxesTauler[UTIL][value][index.destroy();
       element.destroy();
@@ -422,6 +441,7 @@ class Tauler extends Phaser.GameObjects.Sprite{
   }
 
   buidarTauler(){
+    //Pre:-- Post: Esborrades totes les peces no utils del tauler
     this.fitxesTauler.inutil.forEach(function(element, index){
       //this.fitxesTauler[INUTIL][index].forEach(function(element, index2){
       element.forEach(function(element2, index2){
@@ -450,6 +470,7 @@ class Tauler extends Phaser.GameObjects.Sprite{
   }
 
   finalTurn(){
+    //Pre:-- Post: Gestionada la finalitzacio del turn
     let complet = true;
     comprobarQuadratComplet:
     for (let i = 1; i < 5; i++){
@@ -473,6 +494,7 @@ class Tauler extends Phaser.GameObjects.Sprite{
 }
 
 class BotoRobar extends Phaser.GameObjects.Sprite{
+  //Boto per robar cartes del deck
   constructor(scene, x, y, ma){
     super(scene, x, y, 'boto_robar');
     this.setScale(2);
@@ -504,6 +526,7 @@ class BotoRobar extends Phaser.GameObjects.Sprite{
 }
 
 class BotoFinalTurn extends Phaser.GameObjects.Sprite{
+  //Boto per finalitzar el torn
   constructor(scene, x, y){
     super(scene, x, y, 'boto_final');
     this.setScale(2);

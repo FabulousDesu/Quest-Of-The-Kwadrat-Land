@@ -2,6 +2,7 @@ import { Carta } from './Card.js';
 import { Globals } from './Globals.js';
 
 export class Deck{
+  //Classe per gestionar les cartes que no té el jugador a la ma
   constructor(scene){
     this.scene = scene;
     this.cartes = [];
@@ -16,6 +17,7 @@ export class Deck{
   }
 
   barrejar(){
+    //Pre:-- Post: Cartes del deck barrejades
     //barrejar cartes seguint algorisme de Fisher-Yates
     var j, x, i;
     for (i = this.cartes.length - 1; i > 0; i--) {
@@ -27,6 +29,7 @@ export class Deck{
   }
 
   pucRobarCarta(){
+    //Pre:-- Post: Retorna cert si el jugador pot robar alguna carta
     if (this.cartes.length == 0){
       console.log("No pots robar, deck buit");
       return false;
@@ -37,6 +40,7 @@ export class Deck{
   }
 
   robarCarta(){
+    //Pre:-- Post: Retorna una carta robada pel jugaor
     if (this.cartes.length == 0){
       this.barrejar();
     }
@@ -47,6 +51,7 @@ export class Deck{
   }
 
   cartaUsada(carta){
+    //Pre:-- Post: Retornada una carta returnada anteriorment a la ma al deck
     this.cartes.push({type: carta.type, forma: carta.val})
   }
 }
