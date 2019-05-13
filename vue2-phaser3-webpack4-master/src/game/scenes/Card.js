@@ -15,7 +15,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
 
     let that = this;
     this.dibuixarPeces = function(escala, marcada = false){
-      that.fitxa.forEach(function(element){element.destroy()});
+      that.fitxa.forEach(function(element, index){that.fitxa[index].destroy()});
       let offset = midaFitxa * escala;
       let nova_x = that.x
       let nova_y = that.y;
@@ -45,7 +45,6 @@ export class Carta extends Phaser.GameObjects.Sprite{
     this.on('pointerover', function () {
         that.setScale(1.5);
         that.dibuixarPeces(0.75);
-        //that.fitxa.forEach(function(element){element.setDepth(2)});
     });
 
     this.on('pointerout', function () {

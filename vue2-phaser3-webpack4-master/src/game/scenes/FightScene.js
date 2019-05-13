@@ -7,6 +7,18 @@ import { Hud } from './Hud.js'
 var graphics;
 var rect;
 
+const UTIL = 0;
+const INUTIL = 1;
+
+const WAIT = 0;
+const ATC_FOC = 1;
+const DEF_GEL = 2;
+const ATC_VERI = 3;
+const ATC_ENEMIC = 4;
+const FINAL_TURN = 5;
+const NOU_TURN = 6;
+const EXTRA = 7;
+
 export default class FightScene extends Scene {
   constructor () {
     super({ key: 'FightScene' });
@@ -36,13 +48,16 @@ export default class FightScene extends Scene {
 
     //Inicialitzar turn
     this.ma.nouTurn();
-    //this.text = this.add.text(300, 300, '').setFontFamily('Arial').setFontSize(15).setColor('#ffffff');
-    //this.count = 0;
+    this.text = this.add.text(400, 300, "").setFontFamily('Arial').setFontSize(50).setColor('#ffffff');
+
+
+
   }
 
   update () {
     //this.count++;
     //this.text.setText("Counter: " + this.count);
+    this.tauler.update();
     graphics.clear();
     graphics.strokeRectShape(rect);
   }
@@ -78,7 +93,6 @@ class Enemy extends Phaser.GameObjects.Sprite{
       that.textVida.setText('Vida: ' + that.vida + ' (-' + that.veri + ')');
       that.textEscut.setText('Escut: ' + that.escut);
       that.textIntencio.setText(that.accioActual[0] + '/' + that.accioActual[1]);
-      that.scene.update();
     }
 
     this.golpejat = function(valor){
@@ -124,11 +138,6 @@ class Enemy extends Phaser.GameObjects.Sprite{
 
     this.nouTurn();
   }
-
-  update (){
-    this.updateCounters();
-  }
-
 }
 
 class Ma extends Phaser.GameObjects.Sprite{
@@ -174,8 +183,7 @@ class Tauler extends Phaser.GameObjects.Sprite{
   constructor (scene, x, y, ){
     super(scene, x, y, 'tauler');
     this.mida = 6;
-
-    this.fitxesTauler = [];
+    this.fitxesTauler = [[[],[],[],[],[]],[[],[],[],[],[]]]; //Sorry
     this.matriu = [[0,0,0,0,0,0],
                    [0,0,0,0,0,0],
                    [0,0,0,0,0,0],
@@ -192,14 +200,6 @@ class Tauler extends Phaser.GameObjects.Sprite{
     let that = this;
 
     //Funcio per colocar carta, retorna cert si l'ha pogut colocar4
-    this.wait = function(ms){
-      let start = new Date().getTime();
-      while(true){
-        if ((new Date().getTime() - start) > ms){
-          break;
-        }
-      }
-    }
 
     this.colocarCarta = function(carta){
       if (this.scene.ma.accions <= 0){
@@ -240,16 +240,22 @@ class Tauler extends Phaser.GameObjects.Sprite{
       for (let i = -2; i < 2; i++){
         for (let j = -2; j < 2; j++){
           if (carta.val[j+2][i+2] != 0){
+            let frame = carta.type - 1 + 4;
+            let util = INUTIL;
             if (!(casellaSeleccionada[1] + j == 0 || casellaSeleccionada[1] + j == 5 || casellaSeleccionada[0] + i == 0 || casellaSeleccionada[0] + i == 5)){
               aux++;
+              frame -= 4;
+              util = UTIL;
             }
+
             that.matriu[casellaSeleccionada[1] + j][casellaSeleccionada[0] + i] = carta.type;
-            let sprite_aux = that.scene.add.sprite((casellaSeleccionada[0] + i)*50 + (that.x - 150 + 25) , (casellaSeleccionada[1] + j)*50 + (that.x - 150 + 25), 'fitxa', carta.type -1);
+            let sprite_aux = that.scene.add.sprite((casellaSeleccionada[0] + i)*50 + (that.x - 150 + 25) , (casellaSeleccionada[1] + j)*50 + (that.x - 150 + 25), 'fitxa', frame);
             sprite_aux.setScale(1.6);
-            that.fitxesTauler.push(sprite_aux);
+            that.fitxesTauler[util][carta.type].push(sprite_aux);
           }
         }
       }
+
       that.valors[carta.type] += aux;
       aux = that.scene.ma.cartes.indexOf(carta);
       that.scene.ma.cartes.splice(aux, 1);
@@ -259,9 +265,20 @@ class Tauler extends Phaser.GameObjects.Sprite{
       return true;
     }
 
+    this.buidarFitxesTauler = function(value){
+      that.fitxesTauler[UTIL][value].forEach(function(element, index){
+        that.fitxesTauler[UTIL][value][index].destroy();
+      })
+      that.fitxesTauler[UTIL][value] = [];
+    }
+
     this.buidarTauler = function(){
-      that.fitxesTauler.forEach(function(element){element.destroy()});
-      that.fitxesTauler = [];
+      that.fitxesTauler[INUTIL].forEach(function(element, index){
+        that.fitxesTauler[INUTIL][index].forEach(function(element, index2){
+          that.fitxesTauler[INUTIL][index][index2].destroy();
+        })
+      })
+      that.fitxesTauler = [[[],[],[],[],[]],[[],[],[],[],[]]];
 
       that.cartesUsades.forEach(function(element){
         that.scene.deck.cartaUsada(element);
@@ -296,38 +313,136 @@ class Tauler extends Phaser.GameObjects.Sprite{
         that.valors.forEach(function(element, index){ that.valors[index] *= 2; })
       }
 
-      //Executar peces colocades
-      that.wait(1000);
-      console.log("Atac Foc");
-      if (that.valors[1] >= 0){ //peces de foc
-        that.scene.enemic.golpejat(that.valors[1]);
-        that.wait(3000);
+      that.estat = ATC_FOC;
+    }
+    this.estat = WAIT;
+    this.executatUnCop = false;
+    this.temps = 0;
+    this.tempsEspera = 0;
+  }
+
+
+  update(){
+    if (this.estat == WAIT){
+
+    }else if (this.estat == ATC_FOC) {
+      if (! this.executatUnCop){
+        this.tempsEspera = 0;
+        this.temps = new Date();
+        this.executatUnCop = true;
+
+        if (this.valors[1] > 0){ //peces de foc
+          this.scene.enemic.golpejat(this.valors[1]);
+          this.buidarFitxesTauler(1);
+          this.tempsEspera = 1000;
+        }
       }
 
-      console.log("Defensa Gel");
-      if (that.valors[2] > 0){ //peces de gel
-        Globals.escut += that.valors[2];
-        console.log(Globals.escut);
-        that.scene.hud.updateCounter();
-        that.wait(1000);
+      if ((new Date()) - this.temps > this.tempsEspera){
+        this.estat = DEF_GEL;
+        this.executatUnCop = false;
       }
 
-      console.log("enverinar");
-      if (that.valors[3] > 0){ //Peces de veri
-        that.scene.enemic.enverinar(that.valors[3]);
-        that.wait(1000);
+    }else if (this.estat == DEF_GEL) {
+      if (! this.executatUnCop){
+        this.tempsEspera = 0;
+        this.temps = new Date();
+        this.executatUnCop = true;
+
+        if (this.valors[2] > 0){ //peces de gel
+          Globals.escut += this.valors[2];
+          this.scene.hud.updateCounter();
+          this.buidarFitxesTauler(2);
+          this.tempsEspera = 1000;
+        }
       }
 
-      console.log("Enemic");
-      that.scene.enemic.executarAccio();
-      that.wait(1000);
+      if ((new Date()) - this.temps > this.tempsEspera){
+        this.estat = ATC_VERI;
+        this.executatUnCop = false;
+      }
 
-      console.log("nouTurn");
-      this.buidarTauler();
-      that.scene.ma.nouTurn();
-      that.scene.enemic.nouTurn();
+    }else if (this.estat == ATC_VERI) {
+      if (! this.executatUnCop){
+        this.tempsEspera = 0;
+        this.temps = new Date();
+        this.executatUnCop = true;
+
+        if (this.valors[3] > 0){ //peces de gel
+          this.scene.enemic.enverinar(this.valors[3]);
+          this.tempsEspera = 1000;
+          this.buidarFitxesTauler(3);
+        }
+      }
+
+      if ((new Date()) - this.temps > this.tempsEspera){
+        this.estat = EXTRA;
+        this.executatUnCop = false;
+      }
+
+    }else if (this.estat == EXTRA) {
+      if (! this.executatUnCop){
+        this.tempsEspera = 0;
+        this.temps = new Date();
+        this.executatUnCop = true;
+
+        if (this.valors[3] > 0){ //peces de gel
+          this.buidarFitxesTauler(4);
+          this.tempsEspera = 1000;
+        }
+      }
+
+      if ((new Date()) - this.temps > this.tempsEspera){
+        this.estat = ATC_ENEMIC;
+        this.executatUnCop = false;
+      }
+
+    }else if (this.estat == ATC_ENEMIC) {
+      if (! this.executatUnCop){
+        this.tempsEspera = 1000;
+        this.temps = new Date();
+        this.executatUnCop = true;
+        this.scene.enemic.executarAccio();
+      }
+
+      if ((new Date()) - this.temps > this.tempsEspera){
+        this.estat = FINAL_TURN;
+        this.executatUnCop = false;
+      }
+
+    }else if (this.estat == FINAL_TURN) {
+      if (! this.executatUnCop){
+        this.tempsEspera = 1000;
+        this.temps = new Date();
+        this.executatUnCop = true;
+        this.buidarTauler();
+      }
+
+      if ((new Date()) - this.temps > this.tempsEspera){
+        this.estat = NOU_TURN;
+        this.executatUnCop = false;
+      }
+    }else{
+      if (! this.executatUnCop){
+        this.tempsEspera = 1000;
+        this.temps = new Date();
+        this.executatUnCop = true;
+
+        this.scene.ma.nouTurn();
+        this.scene.enemic.nouTurn();
+        this.executatUnCop = true;
+        this.scene.text.setText("NOU TURN");
+
+      }
+
+      if ((new Date()) - this.temps > this.tempsEspera){
+        this.estat = WAIT;
+        this.scene.text.setText("");
+        this.executatUnCop = false;
+      }
     }
   }
+
 }
 
 class BotoRobar extends Phaser.GameObjects.Sprite{
