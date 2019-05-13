@@ -149,54 +149,53 @@ class Ma extends Phaser.GameObjects.Sprite{
     this.cartes.forEach(function(element){
       scene.children.add(element);
     })
+  }
 
+  dibuixarAccions(value){
+    if (value < this.accions){
+      while(value < this.accions){
+        this.accionsSprite[this.accionsSprite.length-1].destroy();
+        this.accionsSprite.pop();
+        this.accions -= 1;
+      }
+    }
+    else{
+      let aux = [667, 65];
+      while(this.accionsSprite.length < 4){
+        if(this.accionsSprite.length != 0){
+          aux[0] = this.accionsSprite[this.accionsSprite.length-1].x + 25;
+        }
+        let nou = this.scene.add.sprite(aux[0], aux[1], 'accio');
+        this.scene.children.add(nou);
+        this.accionsSprite.push(nou);
+      }
+    }
+  }
+
+  ordenarCartes(){
+    let aux = 0;
+    let mida = this.cartes.length;
     let that = this;
+    this.cartes.forEach(function(element, index){
+      element.desplacarA([that.x + (index + 0.5 - mida/2) * 82, that.y]);
+    })
+  };
 
-    this.dibuixarAccions = function(value){
-      if (value < that.accions){
-        while(value < that.accions){
-          that.accionsSprite[that.accionsSprite.length-1].destroy();
-          that.accionsSprite.pop();
-          that.accions -= 1;
-        }
-      }
-      else{
-        let aux = [667, 65];
-        while(that.accionsSprite.length < 4){
-          if(that.accionsSprite.length != 0){
-            aux[0] = that.accionsSprite[that.accionsSprite.length-1].x + 25;
-          }
-          let nou = that.scene.add.sprite(aux[0], aux[1], 'accio');
-          that.scene.children.add(nou);
-          that.accionsSprite.push(nou);
-        }
-      }
+  robarCarta(){
+    this.cartes.push(this.scene.deck.robarCarta());
+    this.scene.children.add(this.cartes[this.cartes.length-1]);
+    this.ordenarCartes();
+  }
+
+  nouTurn(){
+    this.dibuixarAccions(4)
+    this.accions = 4;
+    Globals.escut = 0;
+    this.scene.hud.updateCounter();
+    while(this.cartes.length < 4){
+      this.robarCarta();
     }
 
-    this.ordenarCartes = function(){
-      let aux = 0;
-      let mida = that.cartes.length;
-      that.cartes.forEach(function(element, index){
-        element.desplacarA([that.x + (index + 0.5 - mida/2) * 82, that.y]);
-      })
-    };
-
-    this.robarCarta = function(){
-      that.cartes.push(that.scene.deck.robarCarta());
-      that.scene.children.add(that.cartes[that.cartes.length-1]);
-      that.ordenarCartes();
-    }
-
-    this.nouTurn = function(){
-      this.dibuixarAccions(4)
-      that.accions = 4;
-      Globals.escut = 0;
-      that.scene.hud.updateCounter();
-      while(that.cartes.length < 4){
-        that.robarCarta();
-      }
-
-    }
   }
 }
 
