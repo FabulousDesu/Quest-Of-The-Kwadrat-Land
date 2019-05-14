@@ -4,7 +4,7 @@ const midaFitxa = 32;
 
 export class Carta extends Phaser.GameObjects.Sprite{
   //Classe per crear una carta del joc
-  constructor(scene, x, y, type, forma = [[0,0,0,0],[0,0,0,0],[0,0,1,0],[0,0,0,0]]){
+  constructor(scene, x, y, type, forma = [[0,0,0,0],[0,0,0,0],[0,0,1,0],[0,0,0,0]], enBotiga = false){
     super(scene, x, y, 'carta');
 
     //Dibuixar la Peca sobre la Carta
@@ -20,9 +20,15 @@ export class Carta extends Phaser.GameObjects.Sprite{
 
     this.dibuixarPeces(0.4);
 
-    //Fer que sigui draggable 
+    //Fer que sigui draggable
     this.setInteractive();
-    scene.input.setDraggable(this);
+    if (! enBotiga)
+      scene.input.setDraggable(this);
+    else {
+      this.on('pointerdown', function (event) {
+        console.log("intentCompra");
+      }, this);
+    }
 
     this.lastPos = [this.x, this.y];
     this.on('pointerover', function () {

@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import BootScene from './scenes/BootScene'
 import PlayScene from './scenes/PlayScene'
 import FightScene from './scenes/FightScene'
+import ShopScene from './scenes/ShopScene'
 
 
 function launch() {
@@ -18,7 +19,7 @@ function launch() {
             }
         },
         pixelArt: true,
-        scene: [BootScene, PlayScene, FightScene]
+        scene: [BootScene, PlayScene, FightScene, ShopScene]
     })
 }
 

@@ -10,8 +10,11 @@ import boto_finalitzar from '@/game/assets/next_turn.png';
 import hud from '@/game/assets/hud.png';
 import cor from '@/game/assets/cor.png';
 import escut from '@/game/assets/escut.png';
+import moneda from '@/game/assets/moneda.png';
 import accio from '@/game/assets/accio.png';
 import fonsCombat from '@/game/assets/fonsCombat.png';
+import fonsBotiga from '@/game/assets/botiga.png';
+import botiguer from '@/game/assets/botiga_botiguer.png';
 
 export default class BootScene extends Scene {
     constructor() {
@@ -29,6 +32,9 @@ export default class BootScene extends Scene {
         this.load.image('fons', fonsCombat);
         this.load.image('cor', cor);
         this.load.image('escut', escut);
+        this.load.image('moneda', moneda);
+        this.load.image('botiga', fonsBotiga);
+        this.load.image('botiguer', botiguer);
         this.load.spritesheet('fitxa', base_fitxa, { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('boto_robar', boto_robar, { frameWidth: 30, frameHeight: 44 });
         this.load.spritesheet('boto_final', boto_finalitzar, { frameWidth: 35, frameHeight: 20 });
@@ -37,6 +43,6 @@ export default class BootScene extends Scene {
 
     create() {
 
-        this.scene.start('FightScene')
+        this.scene.start('FightScene');
     }
 }

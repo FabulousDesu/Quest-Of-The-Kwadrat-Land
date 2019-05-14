@@ -30,7 +30,7 @@ export default class FightScene extends Scene {
     this.enemic = new Enemy(this, 585, 220)
     this.children.add(this.enemic);
 
-    this.hud = new Hud(this, 40, 500);
+    this.hud = new Hud(this);
     this.children.add(this.hud);
     this.botoRobar = new BotoRobar(this, 750, 525, this.ma);
     this.children.add(this.botoRobar);
@@ -86,7 +86,7 @@ class Enemy extends Phaser.GameObjects.Sprite{
 
   heMort(){
     //Pre:-- Post: Executada l'accio morir si l'enemic ha mort
-    if (this.vida <= 0){
+    if (this.vida < 1){
       console.log("ENEMIC MORT"); //----------------------------------------------------------------------
     }
   }
@@ -106,8 +106,8 @@ class Enemy extends Phaser.GameObjects.Sprite{
   enverinar(valor){
     //Pre:-- Post: L'enemic ha estat enverinat per un veri de poder <valor>
     this.veri += Math.floor(valor/2);
-    this.updateCounters();
     this.heMort();
+    this.updateCounters();
   }
 
   executarAccio(){
