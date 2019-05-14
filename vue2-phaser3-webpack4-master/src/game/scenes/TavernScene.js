@@ -47,7 +47,7 @@ export default class TavernScene extends Scene {
     });
     taverner.on('pointerdown', function (event) {
       dialeg.setVisible(true);
-      this.visible = true
+      that.visible = true
       yes.setVisible(true);
       no.setVisible(true);
     }, this);
@@ -65,12 +65,12 @@ export default class TavernScene extends Scene {
       if (!that.visible){
         var isVisible = that.scene.isVisible('PlayScene');
         if (!isVisible) {
-          this.scene.resume('PlayScene');
+          that.scene.resume('PlayScene');
         }
         else {
-          this.scene.start('PlayScene');
+          that.scene.start('PlayScene');
         }
-        this.scene.stop();
+        that.scene.stop();
       }
     }, this);
 
@@ -81,8 +81,13 @@ export default class TavernScene extends Scene {
         this.setFrame(0);
     });
     yes.on('pointerdown', function (event) {
+      if (Globals.vida < Globals.vidaMaxima && Globals.monedes >= 25){
+        Globals.vida += 2;
+        Globals.vida -= Globals.vida%Globals.vidaMaxima;
+        Globals.monedes -= 25;
+      }
       dialeg.setVisible(false);
-      this.visible = false
+      that.visible = false
       yes.setVisible(false);
       no.setVisible(false);
     }, this);
@@ -94,7 +99,7 @@ export default class TavernScene extends Scene {
     });
     no.on('pointerdown', function (event) {
       dialeg.setVisible(false);
-      this.visible = false
+      that.visible = false
       yes.setVisible(false);
       no.setVisible(false);
     }, this);

@@ -7,6 +7,7 @@ export default class MainManuScene extends Scene {
   }
 
   create () {
+    var that = this
     let sky = this.add.image(400, 300, 'sky');
     let boto_play = this.add.sprite(400, 450, 'boto_play', 0).setInteractive();
     let mascara = this.add.sprite(400, 150, 'mascara');
@@ -35,9 +36,8 @@ export default class MainManuScene extends Scene {
         this.setFrame(0);
     });
     boto_play.on('pointerdown', function (event) {
-      var that = this
       that.scene.launch('PlayScene');
-      this.scene.stop();
+      that.scene.stop();
     }, this);
   }
   update () {

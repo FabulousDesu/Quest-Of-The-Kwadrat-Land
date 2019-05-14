@@ -50,7 +50,7 @@ export default class PauseScene extends Scene {
       base_volum.setVisible(true);
       b_volum.setVisible(true);
       boto_enrere.setVisible(true);
-      this.regular = true
+      that.regular = true
     }, this);
 
     b_volum.on('dragstart', function (pointer) {
@@ -72,9 +72,8 @@ export default class PauseScene extends Scene {
         this.setFrame(0);
     });
     boto_menu.on('pointerdown', function (event) {
-      var that = this
       that.scene.launch('MainManuScene');
-      this.scene.stop();
+      that.scene.stop();
     }, this);
     boto_enrere.on('pointerover', function () {
         this.setFrame(1);
@@ -89,11 +88,10 @@ export default class PauseScene extends Scene {
       base_volum.setVisible(false);
       b_volum.setVisible(false);
       boto_enrere.setVisible(false);
-      this.regular = false
+      that.regular = false
     }, this);
-    
+
     this.input.keyboard.on('keydown-' + 'ESC', function (event) {
-      console.log("passa")
       that.scene.resume(Globals.escena_ant);
       that.scene.stop();
     }, this);

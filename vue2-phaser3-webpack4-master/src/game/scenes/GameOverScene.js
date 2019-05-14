@@ -7,10 +7,10 @@ export default class GameOverScene extends Scene {
   create () {
     let gameover = this.add.image(400, 300, 'gameover').setInteractive();
     gameover.setScale(2);
+    var that = this
     gameover.on('pointerdown', function (event) {
-      var that = this
       that.scene.launch('MainManuScene');
-      this.scene.stop();
+      that.scene.stop();
     }, this);
   }
   update () {

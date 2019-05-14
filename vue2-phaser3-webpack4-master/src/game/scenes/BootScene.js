@@ -59,6 +59,6 @@ export default class BootScene extends Scene {
         // this.load.audio('thud', ['assets/thud.mp3', 'assets/thud.ogg'])
 
     create() {
-        this.scene.start('GameOverScene')
+        this.scene.start('TavernScene')
     }
 }
