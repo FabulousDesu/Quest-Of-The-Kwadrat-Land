@@ -4,8 +4,9 @@ const midaFitxa = 32;
 
 export class Carta extends Phaser.GameObjects.Sprite{
   //Classe per crear una carta del joc
-  constructor(scene, x, y, type, forma = [[0,0,0,0],[0,0,0,0],[0,0,1,0],[0,0,0,0]], enBotiga = false){
+  constructor(scene, x, y, type, forma = [[0,0,0,0],[0,0,0,0],[0,0,1,0],[0,0,0,0]], obtenir = false, relacioScale = 1){
     super(scene, x, y, 'carta');
+    this.setScale(relacioScale);
 
     //Dibuixar la Peca sobre la Carta
     this.setDepth(0);
@@ -18,32 +19,32 @@ export class Carta extends Phaser.GameObjects.Sprite{
     let that = this;
 
 
-    this.dibuixarPeces(0.4);
+    this.dibuixarPeces(0.4*relacioScale);
 
     //Fer que sigui draggable
     this.setInteractive();
-    if (! enBotiga)
+    if (! obtenir)
       scene.input.setDraggable(this);
-    else { //EN BOTIGA
+    else { //OBTENCIO
       this.on('pointerdown', function (event) {
-        that.scene.intentCompra(that);
+        that.scene.intentDObtencio(that);
       }, this);
     }
 
     this.lastPos = [this.x, this.y];
     this.on('pointerover', function () {
-        that.setScale(1.5);
-        that.dibuixarPeces(0.7);
+        that.setScale(1.5*relacioScale);
+        that.dibuixarPeces(0.7*relacioScale);
     });
 
     this.on('pointerout', function () {
-      this.setScale(1);
-      that.dibuixarPeces(0.4);
+      this.setScale(1*relacioScale);
+      that.dibuixarPeces(0.4*relacioScale);
     });
 
     this.on('dragstart', function (pointer) {
       that.setVisible(false);
-      that.dibuixarPeces(1.6, 2,true);
+      that.dibuixarPeces(1.6*relacioScale, 2,true);
 
     });
 
@@ -62,7 +63,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
 
     this.on('dragend', function (pointer) {
       that.setVisible(true);
-      that.dibuixarPeces(0.4);
+      that.dibuixarPeces(0.4*relacioScale);
       if(that.scene.tauler.colocarCarta(that)){
         //that.fitxa.forEach(function(element){element.destroy()});
         that.fitxa.forEach(function(element, index){that.fitxa[index].destroy()});
@@ -83,7 +84,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
     this.inicialPos[1] = novaPos[1];
     this.x = this.inicialPos[0];
     this.y = this.inicialPos[1];
-    this.dibuixarPeces(0.5);
+    this.dibuixarPeces(0.5*relacioScale);
   }
 
   dibuixarPeces(escala, depth = 1, marcada = false){
@@ -114,6 +115,14 @@ export class Carta extends Phaser.GameObjects.Sprite{
   getMatriuPeca(){
     //Pre:-- Post: Retornada la matriu de la peca
     return this.val;
+  }
+
+  morir(){
+    //Pre:-- Post: Carta eliminada satisfactoriament
+    console.log("morir");
+    this.fitxa.forEach(function(element){element.destroy()});
+    this.fitxa = [];
+    this.destroy();
   }
 
 }
