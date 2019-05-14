@@ -43,6 +43,6 @@ export default class BootScene extends Scene {
 
     create() {
 
-        this.scene.start('FightScene');
+        this.scene.start('ShopScene');
     }
 }

@@ -21,11 +21,11 @@ export default class ShopScene extends Scene {
 
     this.cartesVendre = [
       {carta: new Carta(this, 200, 250, 1, [[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0]], true), preu: 0},
-      {carta: new Carta(this, 400, 250, 1, [[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0]], true), preu: 0},
-      {carta: new Carta(this, 600, 250, 2, [[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0]], true), preu: 0},
-      {carta: new Carta(this, 200, 400, 2, [[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0]], true), preu: 0},
-      {carta: new Carta(this, 400, 400, 3, [[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0]], true), preu: 0},
-      {carta: new Carta(this, 600, 400, 4, [[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0]], true), preu: 0},
+      {carta: new Carta(this, 400, 250, 1, [[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0]], true), preu: 1},
+      {carta: new Carta(this, 600, 250, 2, [[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0]], true), preu: 2},
+      {carta: new Carta(this, 200, 400, 2, [[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0]], true), preu: 3},
+      {carta: new Carta(this, 400, 400, 3, [[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0]], true), preu: 4},
+      {carta: new Carta(this, 600, 400, 4, [[0,0,0,0],[0,0,0,0],[0,1,1,0],[0,0,0,0]], true), preu: 5},
     ];
 
     let that = this;
@@ -37,6 +37,25 @@ export default class ShopScene extends Scene {
     this.botiguer.y = 20 + (Math.sin(this.movimentBotiguer)+1)*20
     if (this.movimentBotiguer >= 2*Math.PI)
     this.movimentBotiguer = 0;
+
+  }
+
+  intentCompra(carta){
+    let trobat = false;
+    let i = 0;
+    while( ! trobat && i < this.cartesVendre.length){
+      if (carta === this.cartesVendre[i].carta){
+        console.log("trobada");
+        trobat = true;
+      }else {
+        i++;
+      }
+    }
+
+    let cartaVendre = this.cartesVendre[i];
+    console.log(cartaVendre);
+
+
 
   }
 }

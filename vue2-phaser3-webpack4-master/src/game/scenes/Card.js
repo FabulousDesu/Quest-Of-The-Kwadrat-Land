@@ -24,9 +24,9 @@ export class Carta extends Phaser.GameObjects.Sprite{
     this.setInteractive();
     if (! enBotiga)
       scene.input.setDraggable(this);
-    else {
+    else { //EN BOTIGA
       this.on('pointerdown', function (event) {
-        console.log("intentCompra");
+        that.scene.intentCompra(that);
       }, this);
     }
 
