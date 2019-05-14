@@ -15,11 +15,12 @@ export class Carta extends Phaser.GameObjects.Sprite{
     this.type = type;          // 1= foc; 2 = gel 3= veri 4= extra
     this.fitxa = [];
     this.inicialPos = [x,y];
+    this.relacioScale = relacioScale;
 
     let that = this;
 
 
-    this.dibuixarPeces(0.4*relacioScale);
+    this.dibuixarPeces(0.4*this.relacioScale);
 
     //Fer que sigui draggable
     this.setInteractive();
@@ -33,18 +34,18 @@ export class Carta extends Phaser.GameObjects.Sprite{
 
     this.lastPos = [this.x, this.y];
     this.on('pointerover', function () {
-        that.setScale(1.5*relacioScale);
-        that.dibuixarPeces(0.7*relacioScale);
+        that.setScale(1.5*this.relacioScale);
+        that.dibuixarPeces(0.7*this.relacioScale);
     });
 
     this.on('pointerout', function () {
-      this.setScale(1*relacioScale);
-      that.dibuixarPeces(0.4*relacioScale);
+      this.setScale(1*this.relacioScale);
+      that.dibuixarPeces(0.4*this.relacioScale);
     });
 
     this.on('dragstart', function (pointer) {
       that.setVisible(false);
-      that.dibuixarPeces(1.6*relacioScale, 2,true);
+      that.dibuixarPeces(1.6*this.relacioScale, 2,true);
 
     });
 
@@ -63,7 +64,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
 
     this.on('dragend', function (pointer) {
       that.setVisible(true);
-      that.dibuixarPeces(0.4*relacioScale);
+      that.dibuixarPeces(0.4*this.relacioScale);
       if(that.scene.tauler.colocarCarta(that)){
         //that.fitxa.forEach(function(element){element.destroy()});
         that.fitxa.forEach(function(element, index){that.fitxa[index].destroy()});
@@ -84,7 +85,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
     this.inicialPos[1] = novaPos[1];
     this.x = this.inicialPos[0];
     this.y = this.inicialPos[1];
-    this.dibuixarPeces(0.5*relacioScale);
+    this.dibuixarPeces(0.5*this.relacioScale);
   }
 
   dibuixarPeces(escala, depth = 1, marcada = false){
@@ -115,6 +116,108 @@ export class Carta extends Phaser.GameObjects.Sprite{
   getMatriuPeca(){
     //Pre:-- Post: Retornada la matriu de la peca
     return this.val;
+  }
+
+  desplacarDreta(){
+    for (let i = 3; i > 0; i--){
+      for (let j = 4; j > 0; j--){
+        this.val[j][i] = this.val[j][i-1];
+      }
+    }
+
+    for (let i = 0; i < 3; i++){
+      this.val[i][0] = 0;
+    }
+  }
+
+  desplacarEsquerra(){
+    for (let i = 0; i < 3; i++){
+      for (let j = 0; j < 4; j++){
+        this.val[j][i] = this.val[j][i+1];
+      }
+    }
+    for (let i = 0; i <= 3; i++){
+      this.val[i][3] = 0;
+    }
+  }
+
+  desplacarAdalt(){
+    for (let j = 0; j < 3; j++){
+      for (let i = 0; i < 4; i++){
+        this.val[j][i] = this.val[j+1][i];
+      }
+    }
+    for (let i = 0; i <= 3; i++){
+      this.val[3][i] = 0;
+    }
+  }
+
+  desplacarAball(){
+    for (let j = 3; j > 0; i--){
+      for (let i = 4; i > 0; i--){
+        this.val[j][i] = this.val[j-1][i];
+      }
+    }
+    for (let i = 0; i <= 3; i++){
+      this.val[0][i] = 0;
+    }
+  }
+
+  centrarPeca(){
+    let valors_columna = [0,0,0,0];
+    let valors_fila = [0,0,0,0];
+    for (let i = 0; i < 4; i++){
+      for (let j = 0; j < 4; j++){
+        valors_columna[i] += this.val[j][i];
+        valors_fila[j] += this.val[j][i];
+      }
+    }
+
+    if (valors_columna[0] == 0 && valors_columna[1] == 0 && valors_columna[3] != 0){
+      this.desplacarEsquerra();
+    }
+
+    if (valors_columna[0] != 0 && valors_columna[2] == 0 && valors_columna[3] == 0){
+      this.desplacarDreta();
+    }
+
+    if (valors_fila[0] == 0 && valors_fila[1] == 0 && valors_fila[3] != 0){
+      this.desplacarAdalt();
+    }
+
+    if (valors_fila[0] != 0 && valors_fila[2] == 0 && valors_fila[3] == 0){
+      this.desplacarAball();
+    }
+  }
+
+  generarPecaAleatoria(grandaria){
+    let aux = 1;
+    let direccions = [[1,0], [-1,0], [0,-1], [0, 1]];
+    let actual = [2, 2];
+
+    let pos_pillades = [[2,2]];
+    let nova_direccio = [];
+
+    this.val[actual[1]][actual[0]] = 1;
+
+    while (aux < grandaria){
+      let mida = pos_pillades.length-1
+      let novaPos = pos_pillades[Phaser.Math.Between(0, mida)];
+      nova_direccio = direccions[Phaser.Math.Between(0, 3)];
+      actual[0] = novaPos[0] + nova_direccio[0];
+      actual[1] = novaPos[1] + nova_direccio[1];
+
+      if (actual[0] >= 0 && actual[0] < 4 && actual[1] >= 0 && actual[1] < 4 && this.val[actual[1]][actual[0]] == 0){
+          this.val[actual[1]][actual[0]] = 1;
+          pos_pillades.push([actual[0],actual[1]]);
+          aux++;
+      }
+      actual = [];
+    }
+
+    this.centrarPeca();
+
+    this.dibuixarPeces(0.4*this.relacioScale);
   }
 
   morir(){
