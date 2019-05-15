@@ -39,7 +39,9 @@ export default class FightScene extends Scene {
 
     //Inicialitzar turn
     this.ma.nouTorn();
-    this.text = this.add.text(400, 300, "").setFontFamily('Arial').setFontSize(50).setColor('#ffffff');
+    this.spriteNouTorn = this.add.sprite(400,300, 'nouTorn').setScale(3);
+    this.children.add(this.spriteNouTorn);
+    //this.text = this.add.text(400, 300, "").setFontFamily('Arial').setFontSize(50).setColor('#ffffff');
 
     this.pause = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
@@ -377,13 +379,13 @@ class Tauler extends Phaser.GameObjects.Sprite{
         this.scene.ma.nouTorn();
         this.scene.enemic.nouTorn();
         this.executatUnCop = true;
-        this.scene.text.setText("NOU TORN");
+        this.scene.spriteNouTorn.setVisible(true);
 
       }
 
       if ((new Date()) - this.temps > this.tempsEspera){
         this.estat = WAIT;
-        this.scene.text.setText("");
+        this.scene.spriteNouTorn.setVisible(false);
         this.executatUnCop = false;
       }
     }

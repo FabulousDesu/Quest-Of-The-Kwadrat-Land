@@ -44,6 +44,10 @@ import fonsCombat from '@/game/assets/fonsCombat.png';
 import fonsBotiga from '@/game/assets/botiga.png';
 import botiguer from '@/game/assets/botiga_botiguer.png';
 
+import victoria from '@/game/assets/victory.png';
+
+import nouTorn from '@/game/assets/nouTorn.png';
+
 export default class BootScene extends Scene {
     constructor() {
         super({key: 'BootScene'})
@@ -94,12 +98,10 @@ export default class BootScene extends Scene {
         this.load.spritesheet('fitxa', base_fitxa, { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('boto_robar', boto_robar, { frameWidth: 30, frameHeight: 44 });
         this.load.spritesheet('boto_final', boto_finalitzar, { frameWidth: 35, frameHeight: 20 });
-        // this.load.audio('thud', ['assets/thud.mp3', 'assets/thud.ogg'])
+
+        this.load.image('victoria', victoria);
+        this.load.image('nouTorn', nouTorn);
     }
-
-
-
-        // this.load.audio('thud', ['assets/thud.mp3', 'assets/thud.ogg'])
 
     create() {
 
