@@ -32,7 +32,7 @@ export default class VictoryScene extends Scene {
       carta.morir();
       this.escollida = true;
       let that = this;
-      this.time.addEvent({delay: 1500, repeat: 0, callback: that.sortir})
+      this.time.addEvent({delay: 1500, repeat: 0, callback: that.sortir});
     }
   }
 

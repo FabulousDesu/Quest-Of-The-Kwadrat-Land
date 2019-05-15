@@ -7,7 +7,7 @@ var posicioYEnemics = 7; //pixels a restar a l'Y de la posicio dels enemics resp
 var posicioXEnemics = 2; //pixels a restar a l'X de la posicio dels enemics respecte la casella on es situa
 var posicioYCaselles = 4; //pixels a sumar a l'Y de la posicio de la casella
 var tipusCasella = ["enemic_mapa", "event", "normal", "taverna"]; //array per guardar els diferents tipus de caselles que hi ha,
-                                                            //el tipus taverna tambe es el de la botiga
+var actuar = true;                                                            //el tipus taverna tambe es el de la botiga
 //---tecles---
 var up;
 var down;
@@ -197,25 +197,21 @@ export default class MapScene extends Scene {
         rotateToPath: false, //rotar l'esprite respecte el path
         verticalAdjust: true
     });
-
-    //No saltar-se CASELLES
-    this.actuar = true;
   }
 
   update () {
-    console.log(this.actuar);
     //moviment de l'sprite del player
     this.player.x = bombFollow.x;
     this.player.y = bombFollow.y - posicioYEnemics;
 
-    if (this.actuar){
+    if (actuar){
       //Pulsem tecla up
       if (Phaser.Input.Keyboard.JustDown(up)){
         if (jugador.casella.up !== undefined) { //Si hi ha path pel cual anar
           //calculem la distancia que s'ha de recorrer
           var dist = jugador.casella.y - jugador.casella.upSeg.y;
           let that = this;
-          this.actuar = false;
+          actuar = false;
           this.time.addEvent({delay: dist / speed, repeat: 0, callback: that.arribarACasella});
           bombFollow.startFollow({
               positionOnPath: true,
@@ -241,7 +237,7 @@ export default class MapScene extends Scene {
           //calculem la distancia que s'ha de recorrer
           var dist = jugador.casella.downSeg.y - jugador.casella.y;
           let that = this;
-          this.actuar = false;
+          actuar = false;
           this.time.addEvent({delay: dist / speed, repeat: 0, callback: that.arribarACasella});
           bombFollow.startFollow({
               positionOnPath: true,
@@ -270,7 +266,7 @@ export default class MapScene extends Scene {
           //calculem la distancia que s'ha de recorrer
           var dist = jugador.casella.x - jugador.casella.leftSeg.x;
           let that = this;
-          this.actuar = false;
+          actuar = false;
           this.time.addEvent({delay: dist / speed, repeat: 0, callback: that.arribarACasella});
           bombFollow.startFollow({
               positionOnPath: true,
@@ -299,7 +295,7 @@ export default class MapScene extends Scene {
           //calculem la distancia que s'ha de recorrer
           var dist = jugador.casella.rightSeg.x - jugador.casella.x;
           let that = this;
-          this.actuar = false;
+          actuar = false;
           this.time.addEvent({delay: dist / speed, repeat: 0, callback: that.arribarACasella});
           bombFollow.startFollow({
               positionOnPath: true,
@@ -322,8 +318,7 @@ export default class MapScene extends Scene {
 
   arribarACasella(){
     jugador.casella.activarCasella();
-    this.actuar = true;
-    console.log(this.actuar);
+    actuar = true;
   }
 
 }
