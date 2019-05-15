@@ -14,5 +14,5 @@ export var Globals = {
          {type: 1, forma: [[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]}], //{type: 1; forma: [array]};
  escena_ant: '',
  pos_volum_x: 400,
- sound: undefined
+ ost: undefined
 }

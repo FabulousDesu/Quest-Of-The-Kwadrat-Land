@@ -1,6 +1,6 @@
 import {Scene} from 'phaser'
 
-import sky from '@/game/assets/sky.png';
+import fonsMenu from '@/game/assets/fonsMenu.png';
 import bomb from '@/game/assets/bomb.png';
 import mapa from '@/game/assets/mapa1.png';
 import casella from '@/game/assets/casella.png';
@@ -27,7 +27,7 @@ import mascara from '@/game/assets/mascara.png';
 import titoljoc from '@/game/assets/titoljoc.png';
 import boto_play from '@/game/assets/boto_play.png';
 
-import sound from '@/game/assets/Sound/Loopster.ogg';
+import ost from '@/game/assets/Sound/Loopster.ogg';
 
 import tauler from '@/game/assets/tauler.png';
 import carta_base from '@/game/assets/card_base.png';
@@ -50,8 +50,6 @@ export default class BootScene extends Scene {
     }
 
     preload() {
-        this.load.image('sky', sky)
-        this.load.image('bomb', bomb)
         this.load.image('mapa1', mapa)
         this.load.image('casella', casella)
         this.load.image('casellaT', casellaT)
@@ -77,8 +75,7 @@ export default class BootScene extends Scene {
         this.load.image('titoljoc', titoljoc)
         this.load.spritesheet('boto_play', boto_play, { frameWidth: 175, frameHeight: 42 })
 
-        this.load.audio('sound', sound)
-        this.load.image('sky', sky);
+        this.load.image('fonsMenu', fonsMenu);
         this.load.image('bomb', bomb);
         this.load.image('tauler', tauler);
         this.load.image('carta', carta_base);
@@ -91,6 +88,9 @@ export default class BootScene extends Scene {
         this.load.image('moneda', moneda);
         this.load.image('botiga', fonsBotiga);
         this.load.image('botiguer', botiguer);
+
+        this.load.audio('ost', ost);
+
         this.load.spritesheet('fitxa', base_fitxa, { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('boto_robar', boto_robar, { frameWidth: 30, frameHeight: 44 });
         this.load.spritesheet('boto_final', boto_finalitzar, { frameWidth: 35, frameHeight: 20 });
@@ -103,6 +103,6 @@ export default class BootScene extends Scene {
 
     create() {
 
-        this.scene.start('MapScene');
+        this.scene.start('MainMenuScene');
     }
 }

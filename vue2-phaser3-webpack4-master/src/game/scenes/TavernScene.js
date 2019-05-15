@@ -83,8 +83,7 @@ export default class TavernScene extends Scene {
     yes.on('pointerdown', function (event) {
       if (Globals.vida < Globals.vidaMaxima && Globals.monedes >= 25){
         Globals.vida += 2;
-        Globals.vida -= Globals.vida%Globals.vidaMaxima;
-        Globals.monedes -= 25;
+        Globals.vida = Math.min(Math.max(0, Globals.vida), Globals.vidaMaxima);
       }
       dialeg.setVisible(false);
       that.visible = false

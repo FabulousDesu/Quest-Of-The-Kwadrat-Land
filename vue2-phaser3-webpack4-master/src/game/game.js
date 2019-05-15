@@ -9,7 +9,7 @@ import MapScene from './scenes/MapScene'
 import TavernScene from './scenes/TavernScene'
 import PauseScene from './scenes/PauseScene'
 import GameOverScene from './scenes/GameOverScene'
-import MainManuScene from './scenes/MainManuScene'
+import MainMenuScene from './scenes/MainMenuScene'
 
 function launch() {
     new Phaser.Game({
@@ -25,7 +25,7 @@ function launch() {
             }
         },
         pixelArt: true,
-        scene: [BootScene, PlayScene, FightScene, ShopScene, VictoryScene, TavernScene, PauseScene, GameOverScene, MainManuScene, MapScene]
+        scene: [BootScene, PlayScene, FightScene, ShopScene, VictoryScene, TavernScene, PauseScene, GameOverScene, MainMenuScene, MapScene]
     })
 }
 export default launch

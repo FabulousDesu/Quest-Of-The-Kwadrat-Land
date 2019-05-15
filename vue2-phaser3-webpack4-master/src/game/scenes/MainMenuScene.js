@@ -1,24 +1,24 @@
 import { Scene } from 'phaser';
 import { Globals } from './Globals.js';
 
-export default class MainManuScene extends Scene {
+export default class MainMenuScene extends Scene {
   constructor () {
-    super({ key: 'MainManuScene' });
+    super({ key: 'MainMenuScene' });
   }
 
   create () {
     var that = this
-    let sky = this.add.image(400, 300, 'sky');
+    let fonsMenu = this.add.image(400, 300, 'fonsMenu');
     let boto_play = this.add.sprite(400, 450, 'boto_play', 0).setInteractive();
     let mascara = this.add.sprite(400, 150, 'mascara');
     let titoljoc = this.add.sprite(405, 300, 'titoljoc');
     titoljoc.setScale(0.5)
     boto_play.setScale(2);
-    let sound = this.sound.add('sound');
+    let sound = this.sound.add('ost');
     sound.play({
       loop: true
-    })
-    Globals.sound = sound
+    });
+    Globals.ost = sound;
     this.anims.create({
       key: "basicmove",
       frameRate: 6,
@@ -36,7 +36,7 @@ export default class MainManuScene extends Scene {
         this.setFrame(0);
     });
     boto_play.on('pointerdown', function (event) {
-      that.scene.launch('PlayScene');
+      that.scene.start('MapScene');
       that.scene.stop();
     }, this);
   }

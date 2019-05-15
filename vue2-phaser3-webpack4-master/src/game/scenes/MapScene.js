@@ -1,4 +1,6 @@
 import { Scene } from 'phaser';
+import { Globals } from './Globals.js';
+import { Hud } from './Hud.js';
 
 //VARIABLES
 var bombFollow; //seguidor del path
@@ -49,6 +51,22 @@ export class Casella extends Phaser.GameObjects.Sprite {
     this.right = right;
     this.num = num;
     this.tipus = tipus;
+    this.EscenaPare = scene;
+
+    if (this.tipus == "enemic_mapa"){
+      this.EscenaPare.anims.create({
+        key: "enemic_mapa",
+        frameRate: 2,
+        repeat: -1,
+        frames: this.EscenaPare.anims.generateFrameNumbers('enemic_mapa', {
+          frames: [0,1]
+        })
+      })
+      this.enemySprite = this.EscenaPare.add.sprite(x - posicioXEnemics, y - posicioYEnemics, 'enemic_mapa');
+      this.enemySprite.play("enemic_mapa");
+      this.enemySprite.setDepth(1);
+    }
+
   }
   setSeg (upSeg, downSeg, leftSeg, rightSeg) {
     //Pre: upSeg: casella seguent en clicar up, downSeg: casella seguent en clicar down, leftSeg: casella seguent en clicar left
@@ -64,7 +82,11 @@ export class Casella extends Phaser.GameObjects.Sprite {
     //Activa les diferents funcions segons el tipus de casella
     if (this.tipus === tipusCasella[0]) {
       //si la casella es de tipus combat, et porta a l'escena del combat
-      console.log("ENEMIC A LA VISTA!!!");
+      this.EscenaPare.scene.launch('FightScene');
+      this.EscenaPare.scene.swapPosition('FightScene', 'MapScene');
+      this.EscenaPare.scene.pause();
+      this.tipus = tipusCasella[2];
+      this.enemySprite.destroy();
     } else if (this.tipus === tipusCasella[1]) {
       //si la casella es de tipus event, activa l'event
       console.log("EVENT o.o");
@@ -81,17 +103,8 @@ export class Casella extends Phaser.GameObjects.Sprite {
 //---caselles---     amb les caselles no et faig l'array perque com les declaro this.add.existing i no se com funciona del tot,
 //                   encara la liare, si al final ho canvies a un array, pots fer l'estroctura de com seria i la matada de canviar
 //                   les definicions a on estan totes les caselles ho faig jo
-var casella0;
-var casella1;
-var casella2;
-var casella3;
-var casella4;
-var casella5;
-var casella6;
-var casella7;
-var casella8;
-var casella9;
-var casella10;
+
+var casella0, casella1, casella2, casella3, casella4, casella5, casella6, casella7, casella8, casella9, casella10;
 
 //JUGADOR
 var jugador = {
@@ -102,6 +115,7 @@ var jugador = {
 export default class MapScene extends Scene {
   constructor () {
     super({ key: 'MapScene' });
+    this.pause
   }
 
   create () {
@@ -110,13 +124,8 @@ export default class MapScene extends Scene {
 
     //SPRITE JUGADOR
     this.player = this.add.sprite(10, 313 - posicioYEnemics, 'player');
-
-    //SPRITES ENEMICS
-    this.enemic = [
-      this.add.sprite(224 - posicioXEnemics, 313 - posicioYEnemics, 'enemic_mapa'),
-      this.add.sprite(288 - posicioXEnemics, 154 - posicioYEnemics, 'enemic_mapa'),
-      this.add.sprite(608 - posicioXEnemics, 313 - posicioYEnemics, 'enemic_mapa')
-    ];
+    this.hud = new Hud(this, 0,0);
+    this.children.add(this.hud);
 
     //INICIALITZAR TECLES
     up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -165,27 +174,13 @@ export default class MapScene extends Scene {
     this.player.play("player");
 
     //---enemics---
-    this.anims.create({
-      key: "enemic_mapa",
-      frameRate: 2,
-      repeat: -1,
-      frames: this.anims.generateFrameNumbers('enemic_mapa', {
-        frames: [0,1]
-      })
-    })
 
-    for (var i = 0; i < this.enemic.length; i++) {
-      this.enemic[i].play("enemic_mapa");
-    }
 
     //casella inicial del player
     jugador.casella = casella0;
 
     //profunditat dels sprites
     this.player.setDepth(2);
-    for (var i = 0; i < this.enemic.length; i++) {
-      this.enemic[i].setDepth(1);
-    }
 
     //POSICIO INICIAL
     bombFollow = this.add.follower(path[0], 0, 0, jugador.sprite);
@@ -197,6 +192,9 @@ export default class MapScene extends Scene {
         rotateToPath: false, //rotar l'esprite respecte el path
         verticalAdjust: true
     });
+
+    //Pausar el joc
+    this.pause = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
   }
 
   update () {
@@ -313,6 +311,13 @@ export default class MapScene extends Scene {
           jugador.casella = jugador.casella.rightSeg;
         }
       };
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(this.pause)){
+      Globals.escena_ant = 'MapScene';
+      this.scene.launch('PauseScene');
+      this.scene.swapPosition('PauseScene', 'MapScene');
+      this.scene.pause();
     }
   }
 

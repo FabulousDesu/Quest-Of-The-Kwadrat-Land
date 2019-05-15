@@ -12,7 +12,7 @@ const ATC_VERI = 3;
 const ATC_ENEMIC = 4;
 const FINAL_TORN = 5;
 const NOU_TORN = 6;
-const EXTRA = 7;
+const CURAR = 7;
 
 export default class FightScene extends Scene {
   //CLASSE PRINCIPAL
@@ -41,10 +41,18 @@ export default class FightScene extends Scene {
     this.ma.nouTorn();
     this.text = this.add.text(400, 300, "").setFontFamily('Arial').setFontSize(50).setColor('#ffffff');
 
+    this.pause = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+
   }
 
   update () {
     this.tauler.update();
+
+    if (Phaser.Input.Keyboard.JustDown(this.pause)){
+      Globals.escena_ant = 'FightScene';
+      this.scene.launch('PauseScene');
+      this.scene.pause();
+    }
   }
 }
 
@@ -296,11 +304,11 @@ class Tauler extends Phaser.GameObjects.Sprite{
       }
 
       if ((new Date()) - this.temps > this.tempsEspera){
-        this.estat = EXTRA;
+        this.estat = CURAR;
         this.executatUnCop = false;
       }
 
-    }else if (this.estat == EXTRA) {
+    }else if (this.estat == CURAR) {
       if (! this.executatUnCop){
         this.tempsEspera = 0;
         this.temps = new Date();
@@ -308,7 +316,13 @@ class Tauler extends Phaser.GameObjects.Sprite{
 
         if (this.valors[4] > 0){ //peces de gel
           this.buidarFitxesTauler(4);
-          this.tempsEspera = 1000;
+          let val_curacio = Math.floor(this.valors[4]/4);
+          if (val_curacio > 0){
+            this.tempsEspera = 1000;
+            Globals.vida += val_curacio;
+            Globals.vida = Math.min(Math.max(0, Globals.vida), Globals.vidaMaxima); //Math.clamp(Globals.vida, 0, Globals.vidaMaxima);
+            this.scene.hud.updateCounter();
+          }
         }
       }
 

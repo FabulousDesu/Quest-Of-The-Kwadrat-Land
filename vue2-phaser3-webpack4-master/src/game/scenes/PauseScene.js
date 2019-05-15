@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { Globals } from './Globals.js';
+
 export default class PauseScene extends Scene {
   constructor () {
     super({ key: 'PauseScene' });
@@ -62,7 +63,7 @@ export default class PauseScene extends Scene {
       }
     })
     b_volum.on('dragend', function (pointer) {
-      Globals.sound.volume = (this.x-96) / (702-96)
+      Globals.ost.volume = (this.x-96) / (702-96)
     })
 
     boto_menu.on('pointerover', function () {
