@@ -2,6 +2,12 @@ import {Scene} from 'phaser'
 
 import sky from '@/game/assets/sky.png';
 import bomb from '@/game/assets/bomb.png';
+import mapa from '@/game/assets/mapa1.png';
+import casella from '@/game/assets/casella.png';
+import casellaT from '@/game/assets/casellaT.png';
+import player from '@/game/assets/player.png';
+import enemic from '@/game/assets/enemic.png';
+import enemy from '@/game/assets/enemic.png';
 
 import fmenu from '@/game/assets/taberna.png';
 import taverner2 from '@/game/assets/taberner.png';
@@ -46,6 +52,12 @@ export default class BootScene extends Scene {
     preload() {
         this.load.image('sky', sky)
         this.load.image('bomb', bomb)
+        this.load.image('mapa1', mapa)
+        this.load.image('casella', casella)
+        this.load.image('casellaT', casellaT)
+        this.load.spritesheet('player', player, {frameWidth: 32, frameHeight: 32})
+        this.load.spritesheet('enemic', enemic, {frameWidth: 32, frameHeight: 32})
+        this.load.image('enemy', enemy)
         this.load.image('fmenu', fmenu)
         this.load.spritesheet('taverner2', taverner2, { frameWidth: 46, frameHeight: 62 })
         this.load.image('porta', porta)
