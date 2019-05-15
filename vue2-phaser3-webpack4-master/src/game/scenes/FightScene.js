@@ -171,7 +171,7 @@ class Enemy extends Phaser.GameObjects.Sprite{
 class Ma extends Phaser.GameObjects.Sprite{
   //Ma de cartes del jugador
   constructor (scene, x, y) {
-    super(scene, x, y, 'bomb');
+    super(scene, x, y, 'bomb').setVisible(false);
     this.scene = scene;
     this.accions = 4;
     this.accionsSprite = [];
