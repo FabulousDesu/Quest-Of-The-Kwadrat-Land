@@ -1,7 +1,6 @@
-//http://localhost:9000
+import { Scene } from 'phaser';
 
 //VARIABLES
-//---altres---
 var bombFollow; //seguidor del path
 var speed = 0.2; //velocitat del player
 var posicioYEnemics = 7; //pixels a restar a l'Y de la posicio dels enemics respecte la casella on es situa
@@ -9,7 +8,6 @@ var posicioXEnemics = 2; //pixels a restar a l'X de la posicio dels enemics resp
 var posicioYCaselles = 4; //pixels a sumar a l'Y de la posicio de la casella
 var tipusCasella = ["enemic_mapa", "event", "normal", "taverna"]; //array per guardar els diferents tipus de caselles que hi ha,
                                                             //el tipus taverna tambe es el de la botiga
-
 //---tecles---
 var up;
 var down;
@@ -40,8 +38,6 @@ var path = [
   new Phaser.Curves.Path(372, 407).lineTo(536, 407),
   new Phaser.Curves.Path(536, 407).lineTo(372, 407)
 ];
-
-import { Scene } from 'phaser';
 
 //CASELLA
 export class Casella extends Phaser.GameObjects.Sprite {
@@ -201,117 +197,133 @@ export default class MapScene extends Scene {
         rotateToPath: false, //rotar l'esprite respecte el path
         verticalAdjust: true
     });
+
+    //No saltar-se CASELLES
+    this.actuar = true;
   }
 
   update () {
+    console.log(this.actuar);
     //moviment de l'sprite del player
     this.player.x = bombFollow.x;
     this.player.y = bombFollow.y - posicioYEnemics;
 
-    //Pulsem tecla up
-    if (Phaser.Input.Keyboard.JustDown(up)){
-      if (jugador.casella.up !== undefined) { //Si hi ha path pel cual anar
-        //Activem la funcio que ha de fer la casella
-        jugador.casella.upSeg.activarCasella();
+    if (this.actuar){
+      //Pulsem tecla up
+      if (Phaser.Input.Keyboard.JustDown(up)){
+        if (jugador.casella.up !== undefined) { //Si hi ha path pel cual anar
+          //calculem la distancia que s'ha de recorrer
+          var dist = jugador.casella.y - jugador.casella.upSeg.y;
+          let that = this;
+          this.actuar = false;
+          this.time.addEvent({delay: dist / speed, repeat: 0, callback: that.arribarACasella});
+          bombFollow.startFollow({
+              positionOnPath: true,
+              duration: dist / speed, //canviem la duracio segons la distacia i la velocitat del player
+              yoyo: false,
+              repeat: 0,
+              rotateToPath: false,
+              verticalAdjust: true
+          });
 
-        //calculem la distancia que s'ha de recorrer
-        var dist = jugador.casella.y - jugador.casella.upSeg.y;
-        bombFollow.startFollow({
-            positionOnPath: true,
-            duration: dist / speed, //canviem la duracio segons la distacia i la velocitat del player
-            yoyo: false,
-            repeat: 0,
-            rotateToPath: false,
-            verticalAdjust: true
-        });
+          //actualitzem el path a seguir
+          bombFollow.setPath(jugador.casella.up);
 
-        //actualitzem el path a seguir
-        bombFollow.setPath(jugador.casella.up);
+          //actualitzem la casella actual
+          jugador.casella = jugador.casella.upSeg;
+        }
+      };
 
-        //actualitzem la casella actual
-        jugador.casella = jugador.casella.upSeg;
-      }
-    };
+      //Pulsem tecla down
+      if (Phaser.Input.Keyboard.JustDown(down)){
+        if (jugador.casella.down !== undefined) { //Si hi ha path pel cual anar
 
-    //Pulsem tecla down
-    if (Phaser.Input.Keyboard.JustDown(down)){
-      if (jugador.casella.down !== undefined) { //Si hi ha path pel cual anar
-        //Activem la funcio que ha de fer la casella
-        jugador.casella.downSeg.activarCasella();
+          //calculem la distancia que s'ha de recorrer
+          var dist = jugador.casella.downSeg.y - jugador.casella.y;
+          let that = this;
+          this.actuar = false;
+          this.time.addEvent({delay: dist / speed, repeat: 0, callback: that.arribarACasella});
+          bombFollow.startFollow({
+              positionOnPath: true,
+              duration: dist / speed, //canviem la duracio segons la distacia i la velocitat del player
+              yoyo: false,
+              repeat: 0,
+              rotateToPath: false,
+              verticalAdjust: true
+          });
 
-        //calculem la distancia que s'ha de recorrer
-        var dist = jugador.casella.downSeg.y - jugador.casella.y;
-        bombFollow.startFollow({
-            positionOnPath: true,
-            duration: dist / speed, //canviem la duracio segons la distacia i la velocitat del player
-            yoyo: false,
-            repeat: 0,
-            rotateToPath: false,
-            verticalAdjust: true
-        });
+          //actualitzem el path a seguir
+          bombFollow.setPath(jugador.casella.down);
 
-        //actualitzem el path a seguir
-        bombFollow.setPath(jugador.casella.down);
+          //actualitzem la casella actual
+          jugador.casella = jugador.casella.downSeg;
+        }
+      };
 
-        //actualitzem la casella actual
-        jugador.casella = jugador.casella.downSeg;
-      }
-    };
+      //Pulsem la tecla left
+      if (Phaser.Input.Keyboard.JustDown(left)){
+        if (jugador.casella.left !== undefined) { //Si hi ha path pel cual anar
 
-    //Pulsem la tecla left
-    if (Phaser.Input.Keyboard.JustDown(left)){
-      if (jugador.casella.left !== undefined) { //Si hi ha path pel cual anar
-        //Activem la funcio que ha de fer la casella
-        jugador.casella.leftSeg.activarCasella();
+          //Actulitzem l'escal X a -1 per a que l'esprite s'inverteixi i miri en la direccio a la que es dirigeix
+          this.player.scaleX = -1;
 
-        //Actulitzem l'escal X a -1 per a que l'esprite s'inverteixi i miri en la direccio a la que es dirigeix
-        this.player.scaleX = -1;
+          //calculem la distancia que s'ha de recorrer
+          var dist = jugador.casella.x - jugador.casella.leftSeg.x;
+          let that = this;
+          this.actuar = false;
+          this.time.addEvent({delay: dist / speed, repeat: 0, callback: that.arribarACasella});
+          bombFollow.startFollow({
+              positionOnPath: true,
+              duration: dist / speed, //canviem la duracio segons la distacia i la velocitat del player
+              yoyo: false,
+              repeat: 0,
+              rotateToPath: false,
+              verticalAdjust: true
+          });
 
-        //calculem la distancia que s'ha de recorrer
-        var dist = jugador.casella.x - jugador.casella.leftSeg.x;
-        bombFollow.startFollow({
-            positionOnPath: true,
-            duration: dist / speed, //canviem la duracio segons la distacia i la velocitat del player
-            yoyo: false,
-            repeat: 0,
-            rotateToPath: false,
-            verticalAdjust: true
-        });
+          //actualitzem el path a seguir
+          bombFollow.setPath(jugador.casella.left);
 
-        //actualitzem el path a seguir
-        bombFollow.setPath(jugador.casella.left);
+          //actualitzem la casella actual
+          jugador.casella = jugador.casella.leftSeg;
+        }
+      };
 
-        //actualitzem la casella actual
-        jugador.casella = jugador.casella.leftSeg;
-      }
-    };
+      //Pulsem la tecla right
+      if (Phaser.Input.Keyboard.JustDown(right)){
+        if (jugador.casella.right !== undefined) { //Si hi ha path pel cual anar
 
-    if (Phaser.Input.Keyboard.JustDown(right)){
-      if (jugador.casella.right !== undefined) { //Si hi ha path pel cual anar
-        //Activem la funcio que ha de fer la casella
-        jugador.casella.rightSeg.activarCasella();
+          //Actulitzem l'escal X a 1 per a que l'esprite s'inverteixi i miri en la direccio a la que es dirigeix
+          this.player.setScale(1);
 
-        //Actulitzem l'escal X a 1 per a que l'esprite s'inverteixi i miri en la direccio a la que es dirigeix
-        this.player.setScale(1);
+          //calculem la distancia que s'ha de recorrer
+          var dist = jugador.casella.rightSeg.x - jugador.casella.x;
+          let that = this;
+          this.actuar = false;
+          this.time.addEvent({delay: dist / speed, repeat: 0, callback: that.arribarACasella});
+          bombFollow.startFollow({
+              positionOnPath: true,
+              duration: dist / speed, //canviem la duracio segons la distacia i la velocitat del player
+              yoyo: false,
+              repeat: 0,
+              rotateToPath: false,
+              verticalAdjust: true
+          });
 
-        //calculem la distancia que s'ha de recorrer
-        var dist = jugador.casella.rightSeg.x - jugador.casella.x;
-        bombFollow.startFollow({
-            positionOnPath: true,
-            duration: dist / speed, //canviem la duracio segons la distacia i la velocitat del player
-            yoyo: false,
-            repeat: 0,
-            rotateToPath: false,
-            verticalAdjust: true
-        });
+          //actualitzem el path a seguir
+          bombFollow.setPath(jugador.casella.right);
 
-        //actualitzem el path a seguir
-        bombFollow.setPath(jugador.casella.right);
+          //actualitzem la casella actual
+          jugador.casella = jugador.casella.rightSeg;
+        }
+      };
+    }
+  }
 
-        //actualitzem la casella actual
-        jugador.casella = jugador.casella.rightSeg;
-      }
-    };
+  arribarACasella(){
+    jugador.casella.activarCasella();
+    this.actuar = true;
+    console.log(this.actuar);
   }
 
 }
