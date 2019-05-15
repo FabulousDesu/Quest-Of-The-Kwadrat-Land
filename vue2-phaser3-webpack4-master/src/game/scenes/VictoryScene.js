@@ -18,9 +18,9 @@ export default class VictoryScene extends Scene {
   }
 
   spawnCartesVictoria(){
-    this.cartes.push(new Carta(this, 200, 400, Phaser.Math.Between(1,3), [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]], true, 2));
-    this.cartes.push(new Carta(this, 400, 400, Phaser.Math.Between(1,3), [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]], true, 2));
-    this.cartes.push(new Carta(this, 600, 400, Phaser.Math.Between(1,3), [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]], true, 2));
+    this.cartes.push(new Carta(this, 200, 400, Phaser.Math.Between(1,4), [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]], true, 2));
+    this.cartes.push(new Carta(this, 400, 400, Phaser.Math.Between(1,4), [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]], true, 2));
+    this.cartes.push(new Carta(this, 600, 400, Phaser.Math.Between(1,4), [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]], true, 2));
 
     let that = this;
     this.cartes.forEach(function(element){

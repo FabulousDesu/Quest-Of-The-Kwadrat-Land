@@ -48,6 +48,9 @@ import victoria from '@/game/assets/victory.png';
 
 import nouTorn from '@/game/assets/nouTorn.png';
 
+import eventSprite from '@/game/assets/event.png';
+import afterlife from '@/game/assets/afterlife.png';
+
 export default class BootScene extends Scene {
     constructor() {
         super({key: 'BootScene'})
@@ -101,6 +104,9 @@ export default class BootScene extends Scene {
 
         this.load.image('victoria', victoria);
         this.load.image('nouTorn', nouTorn);
+        this.load.image('event', eventSprite);
+
+        this.load.image('afterlife', afterlife);
     }
 
     create() {

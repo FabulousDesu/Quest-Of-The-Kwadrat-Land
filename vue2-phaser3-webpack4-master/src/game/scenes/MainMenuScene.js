@@ -58,6 +58,5 @@ export default class MainMenuScene extends Scene {
            {type: 1, forma: [[0,0,1,1],[0,1,1,1],[1,1,1,0],[1,1,0,0]]},
            {type: 2, forma: [[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]]},
            {type: 1, forma: [[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]}]; //{type: 1; forma: [array]};
-   Globals.escena_ant= '';
   }
 }

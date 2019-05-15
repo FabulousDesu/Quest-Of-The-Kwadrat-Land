@@ -73,7 +73,8 @@ export default class PauseScene extends Scene {
         this.setFrame(0);
     });
     boto_menu.on('pointerdown', function (event) {
-      that.scene.launch('MainManuScene');
+      that.scene.launch('MainMenuScene');
+      that.scene.remove(Globals.escena_ant);
       that.scene.stop();
     }, this);
     boto_enrere.on('pointerover', function () {

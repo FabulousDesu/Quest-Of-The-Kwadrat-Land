@@ -68,6 +68,8 @@ export class Casella extends Phaser.GameObjects.Sprite {
       this.enemySprite = this.EscenaPare.add.sprite(x - posicioXEnemics, y - posicioYEnemics, 'enemic_mapa');
       this.enemySprite.play("enemic_mapa");
       this.enemySprite.setDepth(1);
+    }else if (this.tipus == "event"){
+      this.activada = false;
     }
 
   }
@@ -85,28 +87,24 @@ export class Casella extends Phaser.GameObjects.Sprite {
     //Activa les diferents funcions segons el tipus de casella
     if (this.tipus === tipusCasella[0]) {
       //si la casella es de tipus combat, et porta a l'escena del combat
-
       this.EscenaPare.scene.launch('FightScene');
-
       if (!un_cop){
         this.EscenaPare.scene.swapPosition('FightScene', 'MapScene');
         un_cop = true;
       }
-
       this.EscenaPare.scene.pause();
       this.tipus = tipusCasella[2];
       this.enemySprite.destroy();
+
     } else if (this.tipus === tipusCasella[1]) {
       //si la casella es de tipus event, activa l'event
-      console.log("EVENT o.o");
-    } else if (this.tipus === tipusCasella[2]) {
-      //casella on no es fa res
-      console.log("AQUI NO PASSA RES, PODEM DESCANSAR ´-`");
-    } else if (this.tipus === tipusCasella[3]){
-      //si la casella es la teverna et porta a l'escena de corresponent
-      console.log("VOLS PENDRE UNA BIRRA? -_·");
-    } else {
-      console.log("VOLS Comprar? -_·");
+      if (! this.activada){
+        this.event = new Event(this.EscenaPare);
+        this.EscenaPare.children.add(this.event);
+        this.activada = true;
+        this.actuar = false;
+      }
+
     }
   }
 }
@@ -121,6 +119,25 @@ var casella0, casella1, casella2, casella3, casella4, casella5, casella6, casell
 var jugador = {
   sprite: undefined,
   casella: undefined,
+}
+
+class Event extends Phaser.GameObjects.Sprite{
+  constructor(scene){
+    super(scene, 400, 300, 'event').setScale(2).setInteractive().setDepth(10);
+
+    console.log(Globals.deck);
+    for (let i = 0; i < 4; i++){
+      let aux = Phaser.Math.Between(0, Globals.deck.length-1);
+      Globals.deck.splice(aux,1);
+    }
+    console.log(Globals.deck);
+
+
+    this.on('pointerdown', function (event) {
+      this.actuar = true;
+      this.destroy();
+    }, this);
+  }
 }
 
 export default class MapScene extends Scene {
@@ -184,9 +201,6 @@ export default class MapScene extends Scene {
     })
 
     this.player.play("player");
-
-    //---enemics---
-
 
     //casella inicial del player
     jugador.casella = casella0;
@@ -325,7 +339,11 @@ export default class MapScene extends Scene {
 
     if (Phaser.Input.Keyboard.JustDown(entrar)){
       if(jugador.casella.tipus == "botiga"){
-        this.scene.launch('ShopScene');
+        if (this.scene.isSleeping('ShopScene')){
+          this.scene.wake('ShopScene');
+        }else{
+          this.scene.launch('ShopScene');
+        }
         this.scene.pause();
       }else if(jugador.casella.tipus == "taverna"){
         this.scene.launch('TavernScene');

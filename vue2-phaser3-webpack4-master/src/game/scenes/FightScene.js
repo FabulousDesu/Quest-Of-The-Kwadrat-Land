@@ -39,7 +39,7 @@ export default class FightScene extends Scene {
 
     //Inicialitzar turn
     this.ma.nouTorn();
-    this.spriteNouTorn = this.add.sprite(400,300, 'nouTorn').setScale(3).setVisible(false).setDepth(4);
+    this.spriteNouTorn = this.add.sprite(400,300, 'nouTorn').setScale(2).setVisible(false).setDepth(4);
     this.children.add(this.spriteNouTorn);
 
     this.pause = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
@@ -61,7 +61,7 @@ export default class FightScene extends Scene {
   }
 
   derrota (){
-    this.scene.launch('GameOverScene');
+    this.scene.launch('GameOverScene', false);
     this.scene.swapPosition('FightScene', 'GameOverScene')
     this.scene.remove('MapScene');
     this.scene.pause();
@@ -227,7 +227,7 @@ class Ma extends Phaser.GameObjects.Sprite{
     this.accions = 4;
     Globals.escut = 0;
     this.scene.hud.updateCounter();
-    while(this.cartes.length < 4){
+    while(this.scene.deck.pucRobarCarta() && this.cartes.length < 4){
       this.robarCarta();
     }
 
