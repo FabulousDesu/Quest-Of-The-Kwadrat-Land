@@ -118,18 +118,6 @@ export class Carta extends Phaser.GameObjects.Sprite{
     return this.val;
   }
 
-  desplacarDreta(){
-    for (let i = 3; i > 0; i--){
-      for (let j = 4; j > 0; j--){
-        this.val[j][i] = this.val[j][i-1];
-      }
-    }
-
-    for (let i = 0; i < 3; i++){
-      this.val[i][0] = 0;
-    }
-  }
-
   desplacarEsquerra(){
     for (let i = 0; i < 3; i++){
       for (let j = 0; j < 4; j++){
@@ -152,17 +140,6 @@ export class Carta extends Phaser.GameObjects.Sprite{
     }
   }
 
-  desplacarAball(){
-    for (let j = 3; j > 0; i--){
-      for (let i = 4; i > 0; i--){
-        this.val[j][i] = this.val[j-1][i];
-      }
-    }
-    for (let i = 0; i <= 3; i++){
-      this.val[0][i] = 0;
-    }
-  }
-
   centrarPeca(){
     let valors_columna = [0,0,0,0];
     let valors_fila = [0,0,0,0];
@@ -177,16 +154,8 @@ export class Carta extends Phaser.GameObjects.Sprite{
       this.desplacarEsquerra();
     }
 
-    if (valors_columna[0] != 0 && valors_columna[2] == 0 && valors_columna[3] == 0){
-      this.desplacarDreta();
-    }
-
-    if (valors_fila[0] == 0 && valors_fila[1] == 0 && valors_fila[3] != 0){
+    if (valors_fila[0] == 0 && valors_fila[3] != 0){
       this.desplacarAdalt();
-    }
-
-    if (valors_fila[0] != 0 && valors_fila[2] == 0 && valors_fila[3] == 0){
-      this.desplacarAball();
     }
   }
 
