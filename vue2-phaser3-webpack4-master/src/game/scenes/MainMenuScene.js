@@ -19,6 +19,9 @@ export default class MainMenuScene extends Scene {
       loop: true
     });
     Globals.ost = sound;
+
+    this.restart();
+
     this.anims.create({
       key: "basicmove",
       frameRate: 6,
@@ -41,5 +44,20 @@ export default class MainMenuScene extends Scene {
     }, this);
   }
   update () {
+  }
+
+  restart (){
+    Globals.vida = 10;
+    Globals.vidaMaxima= 10;
+    Globals.escut= 0;
+    Globals.monedes= 0;
+    Globals.mouseOnCard= false;
+    Globals.deck= [{type: 4, forma: [[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]},
+           {type: 3, forma: [[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]},
+           {type: 2, forma: [[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]},
+           {type: 1, forma: [[0,0,1,1],[0,1,1,1],[1,1,1,0],[1,1,0,0]]},
+           {type: 2, forma: [[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]]},
+           {type: 1, forma: [[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]}]; //{type: 1; forma: [array]};
+   Globals.escena_ant= '';
   }
 }

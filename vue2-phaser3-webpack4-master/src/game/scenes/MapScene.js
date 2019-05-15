@@ -9,7 +9,8 @@ var posicioYEnemics = 7; //pixels a restar a l'Y de la posicio dels enemics resp
 var posicioXEnemics = 2; //pixels a restar a l'X de la posicio dels enemics respecte la casella on es situa
 var posicioYCaselles = 4; //pixels a sumar a l'Y de la posicio de la casella
 var tipusCasella = ["enemic_mapa", "event", "normal", "taverna"]; //array per guardar els diferents tipus de caselles que hi ha,
-var actuar = true;                                                            //el tipus taverna tambe es el de la botiga
+var actuar = true;                                                //el tipus taverna tambe es el de la botiga
+var un_cop = false;
 //---tecles---
 var up;
 var down;
@@ -82,8 +83,14 @@ export class Casella extends Phaser.GameObjects.Sprite {
     //Activa les diferents funcions segons el tipus de casella
     if (this.tipus === tipusCasella[0]) {
       //si la casella es de tipus combat, et porta a l'escena del combat
+
       this.EscenaPare.scene.launch('FightScene');
-      this.EscenaPare.scene.swapPosition('FightScene', 'MapScene');
+
+      if (!un_cop){
+        this.EscenaPare.scene.swapPosition('FightScene', 'MapScene');
+        un_cop = true;
+      }
+      
       this.EscenaPare.scene.pause();
       this.tipus = tipusCasella[2];
       this.enemySprite.destroy();

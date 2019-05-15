@@ -54,6 +54,18 @@ export default class FightScene extends Scene {
       this.scene.pause();
     }
   }
+
+  victoria (){
+    this.scene.launch('VictoryScene');
+    this.scene.stop();
+  }
+
+  derrota (){
+    this.scene.launch('GameOverScene');
+    this.scene.swapPosition('FightScene', 'GameOverScene')
+    this.scene.remove('MapScene');
+    this.scene.pause();
+  }
 }
 
 class Enemy extends Phaser.GameObjects.Sprite{
@@ -61,7 +73,7 @@ class Enemy extends Phaser.GameObjects.Sprite{
   constructor (scene, x, y) {
     super(scene, x, y, 'enemic').setScale(2);
     this.scene = scene;
-    this.vida = 20;
+    this.vida = 1;
     this.escut = 0;
     this.veri = 0;
     this.rang_accio = [[1, 5], [1, 5]] // 0 = Attack 1 = Shield
@@ -95,7 +107,7 @@ class Enemy extends Phaser.GameObjects.Sprite{
   heMort(){
     //Pre:-- Post: Executada l'accio morir si l'enemic ha mort
     if (this.vida < 1){
-      console.log("ENEMIC MORT"); //----------------------------------------------------------------------
+      this.scene.victoria(); //----------------------------------------------------------------------
     }
   }
 
@@ -114,7 +126,6 @@ class Enemy extends Phaser.GameObjects.Sprite{
   enverinar(valor){
     //Pre:-- Post: L'enemic ha estat enverinat per un veri de poder <valor>
     this.veri += Math.floor(valor/2);
-    this.heMort();
     this.updateCounters();
   }
 
@@ -136,7 +147,7 @@ class Enemy extends Phaser.GameObjects.Sprite{
     this.scene.hud.updateCounter();
 
     if(Globals.vida <= 0){
-      console.log("MORT") //----------------------------------------------------------------------
+      this.scene.derrota();
     }
 
   }
@@ -145,6 +156,7 @@ class Enemy extends Phaser.GameObjects.Sprite{
     //Pre:-- Post: L'enemic ha rebut l'efecte del veri
     this.vida -= this.veri;
     this.veri--;
+    this.heMort();
   }
 
   nouTorn(){

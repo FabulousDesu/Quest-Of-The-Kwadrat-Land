@@ -9,7 +9,8 @@ export default class GameOverScene extends Scene {
     gameover.setScale(2);
     var that = this
     gameover.on('pointerdown', function (event) {
-      that.scene.launch('MainManuScene');
+      that.scene.launch('MainMenuScene');
+      that.scene.remove('FightScene');
       that.scene.stop();
     }, this);
   }

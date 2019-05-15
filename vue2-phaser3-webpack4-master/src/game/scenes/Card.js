@@ -160,6 +160,12 @@ export class Carta extends Phaser.GameObjects.Sprite{
   }
 
   generarPecaAleatoria(grandaria){
+    for (let i = 0; i < 4; i++){
+      for (let j = 0; j < 4; j++){
+        this.val[j][i] = 0;
+      }
+    }
+
     let aux = 1;
     let direccions = [[1,0], [-1,0], [0,-1], [0, 1]];
     let actual = [2, 2];
