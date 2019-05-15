@@ -61,17 +61,6 @@ import afterlife from '@/game/assets/afterlife.png';
 //SO
 import ost from '@/game/assets/Sound/Loopster.ogg';
 
-
-
-
-
-
-
-
-
-
-
-
 export default class BootScene extends Scene {
     constructor() {
         super({key: 'BootScene'})
@@ -137,7 +126,7 @@ export default class BootScene extends Scene {
         this.load.image('afterlife', afterlife);
 
         //SO
-        this.load.audio('ost', ost);    
+        this.load.audio('ost', ost);
     }
 
     create() {

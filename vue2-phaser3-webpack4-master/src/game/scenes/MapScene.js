@@ -8,7 +8,7 @@ var speed = 0.2; //velocitat del player
 var posicioYEnemics = 7; //pixels a restar a l'Y de la posicio dels enemics respecte la casella on es situa
 var posicioXEnemics = 2; //pixels a restar a l'X de la posicio dels enemics respecte la casella on es situa
 var posicioYCaselles = 4; //pixels a sumar a l'Y de la posicio de la casella
-var tipusCasella = ["enemic_mapa", "event", "normal", "taverna", "botiga"]; //array per guardar els diferents tipus de caselles que hi ha,
+var tipusCasella = ["enemic_mapa", "event", "normal", "taverna", "botiga", "final"]; //array per guardar els diferents tipus de caselles que hi ha,
 var actuar = true;                                                //
 var un_cop = false;
 //---tecles---
@@ -105,6 +105,11 @@ export class Casella extends Phaser.GameObjects.Sprite {
         this.actuar = false;
       }
 
+    }else if (this.tipus === tipusCasella[5]){
+      this.EscenaPare.scene.launch('GameOverScene', [true]);
+      if (this.EscenaPare.scene.isSleeping('ShopScene'))
+        this.EscenaPare.scene.remove('ShopScene');
+      this.EscenaPare.scene.stop();
     }
   }
 }
@@ -125,13 +130,10 @@ class Event extends Phaser.GameObjects.Sprite{
   constructor(scene){
     super(scene, 400, 300, 'event').setScale(2).setInteractive().setDepth(10);
 
-    console.log(Globals.deck);
     for (let i = 0; i < 4; i++){
       let aux = Phaser.Math.Between(0, Globals.deck.length-1);
       Globals.deck.splice(aux,1);
     }
-    console.log(Globals.deck);
-
 
     this.on('pointerdown', function (event) {
       this.actuar = true;
@@ -173,7 +175,7 @@ export default class MapScene extends Scene {
     casella6 = this.add.existing(new Casella(6, undefined, undefined, path[20], path[7], this, 536, 407 + posicioYCaselles, 'casellaT', tipusCasella[2]));
     casella7 = this.add.existing(new Casella(7, path[8], undefined, path[12], undefined, this, 608, 407 + posicioYCaselles, 'casella', tipusCasella[2]));
     casella8 = this.add.existing(new Casella(8, undefined, path[11], undefined, path[9], this, 608, 313 + posicioYCaselles, 'casella', tipusCasella[0]));
-    casella9 = this.add.existing(new Casella(9, undefined, undefined, path[10], undefined, this, 784, 313 + posicioYCaselles, 'casellaT', tipusCasella[2]));
+    casella9 = this.add.existing(new Casella(9, undefined, undefined, path[10], undefined, this, 784, 313 + posicioYCaselles, 'casellaT', tipusCasella[5]));
     casella10 = this.add.existing(new Casella(10, undefined, undefined, path[13], path[19], this, 372, 407 + posicioYCaselles, undefined, tipusCasella[1]));
 
     //DEFINICIO CASELLES SEGUENTS

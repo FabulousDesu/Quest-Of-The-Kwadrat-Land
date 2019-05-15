@@ -61,7 +61,7 @@ export default class FightScene extends Scene {
   }
 
   derrota (){
-    this.scene.launch('GameOverScene', false);
+    this.scene.launch('GameOverScene', [false]);
     this.scene.swapPosition('FightScene', 'GameOverScene')
     this.scene.remove('MapScene');
     this.scene.pause();
@@ -552,7 +552,7 @@ class BotoRobar extends Phaser.GameObjects.Sprite{
     });
 
     this.on('pointerdown', function (event) {
-      if (that.ma.accions > 0 && that.ma.cartes.length < 7 && that.scene.deck.pucRobarCarta()){
+      if (this.scene.tauler.estat == WAIT && estatthat.ma.accions > 0 && that.ma.cartes.length < 7 && that.scene.deck.pucRobarCarta()){
         that.ma.robarCarta();
         this.ma.dibuixarAccions(that.ma.accions-1);
       }
@@ -580,6 +580,7 @@ class BotoFinalTurn extends Phaser.GameObjects.Sprite{
     });
 
     this.on('pointerdown', function (event) {
+      if (this.scene.tauler.estat == WAIT)
       that.scene.tauler.finalTurn();
     }, this);
   }
