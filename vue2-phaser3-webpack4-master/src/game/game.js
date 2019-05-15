@@ -4,7 +4,7 @@ import PlayScene from './scenes/PlayScene'
 import FightScene from './scenes/FightScene'
 import ShopScene from './scenes/ShopScene'
 import VictoryScene from './scenes/VictoryScene'
-import TestScene from './scenes/TestScene'
+import MapScene from './scenes/MapScene'
 
 import TavernScene from './scenes/TavernScene'
 import PauseScene from './scenes/PauseScene'
@@ -25,7 +25,7 @@ function launch() {
             }
         },
         pixelArt: true,
-        scene: [BootScene, PlayScene, FightScene, ShopScene, VictoryScene, TavernScene, PauseScene, GameOverScene, MainManuScene, TestScene]
+        scene: [BootScene, PlayScene, FightScene, ShopScene, VictoryScene, TavernScene, PauseScene, GameOverScene, MainManuScene, MapScene]
     })
 }
 export default launch

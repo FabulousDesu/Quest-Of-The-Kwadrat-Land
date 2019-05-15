@@ -7,7 +7,7 @@ var speed = 0.2; //velocitat del player
 var posicioYEnemics = 7; //pixels a restar a l'Y de la posicio dels enemics respecte la casella on es situa
 var posicioXEnemics = 2; //pixels a restar a l'X de la posicio dels enemics respecte la casella on es situa
 var posicioYCaselles = 4; //pixels a sumar a l'Y de la posicio de la casella
-var tipusCasella = ["enemic", "event", "normal", "taverna"]; //array per guardar els diferents tipus de caselles que hi ha,
+var tipusCasella = ["enemic_mapa", "event", "normal", "taverna"]; //array per guardar els diferents tipus de caselles que hi ha,
                                                             //el tipus taverna tambe es el de la botiga
 
 //---tecles---
@@ -103,9 +103,9 @@ var jugador = {
   casella: undefined,
 }
 
-export default class TestScene extends Scene {
+export default class MapScene extends Scene {
   constructor () {
-    super({ key: 'TestScene' });
+    super({ key: 'MapScene' });
   }
 
   create () {
@@ -117,9 +117,9 @@ export default class TestScene extends Scene {
 
     //SPRITES ENEMICS
     this.enemic = [
-      this.add.sprite(224 - posicioXEnemics, 313 - posicioYEnemics, 'enemic'),
-      this.add.sprite(288 - posicioXEnemics, 154 - posicioYEnemics, 'enemic'),
-      this.add.sprite(608 - posicioXEnemics, 313 - posicioYEnemics, 'enemic')
+      this.add.sprite(224 - posicioXEnemics, 313 - posicioYEnemics, 'enemic_mapa'),
+      this.add.sprite(288 - posicioXEnemics, 154 - posicioYEnemics, 'enemic_mapa'),
+      this.add.sprite(608 - posicioXEnemics, 313 - posicioYEnemics, 'enemic_mapa')
     ];
 
     //INICIALITZAR TECLES
@@ -170,16 +170,16 @@ export default class TestScene extends Scene {
 
     //---enemics---
     this.anims.create({
-      key: "enemic",
+      key: "enemic_mapa",
       frameRate: 2,
       repeat: -1,
-      frames: this.anims.generateFrameNumbers('enemic', {
+      frames: this.anims.generateFrameNumbers('enemic_mapa', {
         frames: [0,1]
       })
     })
 
     for (var i = 0; i < this.enemic.length; i++) {
-      this.enemic[i].play("enemic");
+      this.enemic[i].play("enemic_mapa");
     }
 
     //casella inicial del player
