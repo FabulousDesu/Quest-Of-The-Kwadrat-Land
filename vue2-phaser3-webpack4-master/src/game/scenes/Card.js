@@ -19,13 +19,12 @@ export class Carta extends Phaser.GameObjects.Sprite{
 
     let that = this;
 
-
     this.dibuixarPeces(0.4*this.relacioScale);
 
     //Fer que sigui draggable
     this.setInteractive();
     if (! obtenir)
-      scene.input.setDraggable(this);
+      that.scene.input.setDraggable(this);
     else { //OBTENCIO
       this.on('pointerdown', function (event) {
         that.scene.intentDObtencio(that);

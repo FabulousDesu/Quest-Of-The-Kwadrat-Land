@@ -12,6 +12,8 @@ export default class VictoryScene extends Scene {
     this.spawnCartesVictoria();
     this.add.sprite(0,0,'victoria').setScale(2).setOrigin(0,0).setDepth(-1);
     this.escollida = false;
+    let aux = this.scene.get('MapScene');
+    aux.hud.updateCounter();
 
   }
 

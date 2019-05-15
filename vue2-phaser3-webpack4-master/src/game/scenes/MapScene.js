@@ -8,14 +8,16 @@ var speed = 0.2; //velocitat del player
 var posicioYEnemics = 7; //pixels a restar a l'Y de la posicio dels enemics respecte la casella on es situa
 var posicioXEnemics = 2; //pixels a restar a l'X de la posicio dels enemics respecte la casella on es situa
 var posicioYCaselles = 4; //pixels a sumar a l'Y de la posicio de la casella
-var tipusCasella = ["enemic_mapa", "event", "normal", "taverna"]; //array per guardar els diferents tipus de caselles que hi ha,
-var actuar = true;                                                //el tipus taverna tambe es el de la botiga
+var tipusCasella = ["enemic_mapa", "event", "normal", "taverna", "botiga"]; //array per guardar els diferents tipus de caselles que hi ha,
+var actuar = true;                                                //
 var un_cop = false;
 //---tecles---
 var up;
 var down;
 var left;
 var right;
+
+var entrar;
 
 //---paths---     (te, aqui tens el teu array)
 var path = [
@@ -90,7 +92,7 @@ export class Casella extends Phaser.GameObjects.Sprite {
         this.EscenaPare.scene.swapPosition('FightScene', 'MapScene');
         un_cop = true;
       }
-      
+
       this.EscenaPare.scene.pause();
       this.tipus = tipusCasella[2];
       this.enemySprite.destroy();
@@ -100,9 +102,11 @@ export class Casella extends Phaser.GameObjects.Sprite {
     } else if (this.tipus === tipusCasella[2]) {
       //casella on no es fa res
       console.log("AQUI NO PASSA RES, PODEM DESCANSAR ´-`");
+    } else if (this.tipus === tipusCasella[3]){
+      //si la casella es la teverna et porta a l'escena de corresponent
+      console.log("VOLS PENDRE UNA BIRRA? -_·");
     } else {
-      //si la casella es la teverna o botiga et porta a l'escena de corresponent
-      console.log("VOLS PENDRE UNA BIRRA/COMPRAR ALGO? -_·");
+      console.log("VOLS Comprar? -_·");
     }
   }
 }
@@ -139,6 +143,7 @@ export default class MapScene extends Scene {
     down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
     left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
     right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+    entrar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
     //INICIALITZAR CASELLES    per si al final les poses en array o has de canviar alguna cosa
     //                         la casella 0 es la inicial, la 9 la final, la 10 l'event, la 4 la taverna i la 5 la botiga
@@ -147,7 +152,7 @@ export default class MapScene extends Scene {
     casella2 = this.add.existing(new Casella(2, path[3], undefined, path[17], undefined, this, 288, 313 + posicioYCaselles, 'casella', tipusCasella[2]));
     casella3 = this.add.existing(new Casella(3, undefined, path[16], undefined, path[4], this, 288, 154 + posicioYCaselles, 'casella', tipusCasella[0]));
     casella4 = this.add.existing(new Casella(4, undefined, undefined, path[15], undefined, this, 432, 154 + posicioYCaselles, 'casellaT', tipusCasella[3]));
-    casella5 = this.add.existing(new Casella(5, path[14], undefined, undefined, path[6], this, 224, 407 + posicioYCaselles, 'casellaT', tipusCasella[3]));
+    casella5 = this.add.existing(new Casella(5, path[14], undefined, undefined, path[6], this, 224, 407 + posicioYCaselles, 'casellaT', tipusCasella[4]));
     casella6 = this.add.existing(new Casella(6, undefined, undefined, path[20], path[7], this, 536, 407 + posicioYCaselles, 'casellaT', tipusCasella[2]));
     casella7 = this.add.existing(new Casella(7, path[8], undefined, path[12], undefined, this, 608, 407 + posicioYCaselles, 'casella', tipusCasella[2]));
     casella8 = this.add.existing(new Casella(8, undefined, path[11], undefined, path[9], this, 608, 313 + posicioYCaselles, 'casella', tipusCasella[0]));
@@ -233,10 +238,7 @@ export default class MapScene extends Scene {
           //actualitzem la casella actual
           jugador.casella = jugador.casella.upSeg;
         }
-      };
-
-      //Pulsem tecla down
-      if (Phaser.Input.Keyboard.JustDown(down)){
+      }else if (Phaser.Input.Keyboard.JustDown(down)){
         if (jugador.casella.down !== undefined) { //Si hi ha path pel cual anar
 
           //calculem la distancia que s'ha de recorrer
@@ -259,10 +261,7 @@ export default class MapScene extends Scene {
           //actualitzem la casella actual
           jugador.casella = jugador.casella.downSeg;
         }
-      };
-
-      //Pulsem la tecla left
-      if (Phaser.Input.Keyboard.JustDown(left)){
+      }else if (Phaser.Input.Keyboard.JustDown(left)){
         if (jugador.casella.left !== undefined) { //Si hi ha path pel cual anar
 
           //Actulitzem l'escal X a -1 per a que l'esprite s'inverteixi i miri en la direccio a la que es dirigeix
@@ -288,10 +287,7 @@ export default class MapScene extends Scene {
           //actualitzem la casella actual
           jugador.casella = jugador.casella.leftSeg;
         }
-      };
-
-      //Pulsem la tecla right
-      if (Phaser.Input.Keyboard.JustDown(right)){
+      }else if (Phaser.Input.Keyboard.JustDown(right)){
         if (jugador.casella.right !== undefined) { //Si hi ha path pel cual anar
 
           //Actulitzem l'escal X a 1 per a que l'esprite s'inverteixi i miri en la direccio a la que es dirigeix
@@ -317,7 +313,7 @@ export default class MapScene extends Scene {
           //actualitzem la casella actual
           jugador.casella = jugador.casella.rightSeg;
         }
-      };
+      }
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.pause)){
@@ -325,6 +321,17 @@ export default class MapScene extends Scene {
       this.scene.launch('PauseScene');
       this.scene.swapPosition('PauseScene', 'MapScene');
       this.scene.pause();
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(entrar)){
+      if(jugador.casella.tipus == "botiga"){
+        this.scene.launch('ShopScene');
+        this.scene.pause();
+      }else if(jugador.casella.tipus == "taverna"){
+        this.scene.launch('TavernScene');
+        this.scene.pause();
+
+      }
     }
   }
 

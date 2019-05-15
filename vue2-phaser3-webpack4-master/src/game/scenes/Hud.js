@@ -35,6 +35,12 @@ export class Hud extends Phaser.GameObjects.Sprite{
       this.textEscut.setText(Globals.escut);
     }
 
+    if(Globals.vida < 10){
+      this.textVida.x = 45;
+    }else{
+      this.textVida.x = 40;
+    }
+
     this.textMonedes.text = "x " + Globals.monedes;
   }
 }

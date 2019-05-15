@@ -47,10 +47,10 @@ export default class MainMenuScene extends Scene {
   }
 
   restart (){
-    Globals.vida = 10;
+    Globals.vida = 4;
     Globals.vidaMaxima= 10;
     Globals.escut= 0;
-    Globals.monedes= 0;
+    Globals.monedes= 74;
     Globals.mouseOnCard= false;
     Globals.deck= [{type: 4, forma: [[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]},
            {type: 3, forma: [[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]},

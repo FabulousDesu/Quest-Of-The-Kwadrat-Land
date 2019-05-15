@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { Globals } from './Globals.js';
+import { Hud } from './Hud.js';
 
 export default class TavernScene extends Scene {
   constructor () {
@@ -10,12 +11,16 @@ export default class TavernScene extends Scene {
 
   create () {
     this.pause = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
-    let fonsmenu = this.add.image(400, 300, 'fmenu');
-    let taverner =  this.add.sprite(150, 290, 'taverner2').setInteractive();
-    let porta =  this.add.sprite(622, 336, 'porta').setInteractive();
-    let dialeg = this.add.image(400, 300, 'dialeg_tabarner');
-    let yes =  this.add.sprite(680, 460, 'botoyes').setInteractive();
-    let no =  this.add.sprite(680, 500, 'botono').setInteractive();
+    let fonsmenu = this.add.image(400, 300, 'fmenu').setScale(2);
+    let taverner =  this.add.sprite(150, 290, 'taverner2').setInteractive().setScale(2);
+    let porta =  this.add.sprite(622, 336, 'porta').setInteractive().setScale(2);
+    let dialeg = this.add.image(400, 300, 'dialeg_tabarner').setScale(2).setVisible(false);
+    let yes =  this.add.sprite(680, 460, 'botoyes').setInteractive().setVisible(false).setScale(2);
+    let no =  this.add.sprite(680, 500, 'botono').setInteractive().setVisible(false).setScale(2);
+    this.hud = new Hud(this, 0,0);
+    this.children.add(this.hud);
+
+/*
     fonsmenu.setScale(2);
     taverner.setScale(2);
     porta.setScale(2);
@@ -25,7 +30,7 @@ export default class TavernScene extends Scene {
     dialeg.setVisible(false);
     yes.setVisible(false);
     no.setVisible(false);
-
+*/
     this.anims.create({
       key: "clean",
       frameRate: 15,
@@ -63,13 +68,9 @@ export default class TavernScene extends Scene {
     });
     porta.on('pointerdown', function (event) {
       if (!that.visible){
-        var isVisible = that.scene.isVisible('PlayScene');
-        if (!isVisible) {
-          that.scene.resume('PlayScene');
-        }
-        else {
-          that.scene.start('PlayScene');
-        }
+        that.scene.resume('MapScene');
+        let aux = this.scene.get('MapScene');
+        aux.hud.updateCounter();
         that.scene.stop();
       }
     }, this);
@@ -83,7 +84,9 @@ export default class TavernScene extends Scene {
     yes.on('pointerdown', function (event) {
       if (Globals.vida < Globals.vidaMaxima && Globals.monedes >= 25){
         Globals.vida += 2;
+        Globals.monedes -= 25;
         Globals.vida = Math.min(Math.max(0, Globals.vida), Globals.vidaMaxima);
+        this.hud.updateCounter();
       }
       dialeg.setVisible(false);
       that.visible = false

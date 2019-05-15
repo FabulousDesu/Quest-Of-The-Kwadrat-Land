@@ -39,12 +39,10 @@ export default class FightScene extends Scene {
 
     //Inicialitzar turn
     this.ma.nouTorn();
-    this.spriteNouTorn = this.add.sprite(400,300, 'nouTorn').setScale(3);
+    this.spriteNouTorn = this.add.sprite(400,300, 'nouTorn').setScale(3).setVisible(false).setDepth(4);
     this.children.add(this.spriteNouTorn);
-    //this.text = this.add.text(400, 300, "").setFontFamily('Arial').setFontSize(50).setColor('#ffffff');
 
     this.pause = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
-
   }
 
   update () {
@@ -137,12 +135,14 @@ class Enemy extends Phaser.GameObjects.Sprite{
       this.efecteVeri();
     }
 
-    this.escut = 0;
-    this.escut += this.accioActual[1];
-    Globals.escut -= this.accioActual[0];
-    if (Globals.escut < 0){
-      Globals.vida += Globals.escut;
-      Globals.escut = 0;
+    if (this.vida > 0){
+      this.escut = 0;
+      this.escut += this.accioActual[1];
+      Globals.escut -= this.accioActual[0];
+      if (Globals.escut < 0){
+        Globals.vida += Globals.escut;
+        Globals.escut = 0;
+      }
     }
 
     this.updateCounters();
@@ -232,6 +232,13 @@ class Ma extends Phaser.GameObjects.Sprite{
     }
 
   }
+
+  drag(opcio){
+    let that = this;
+    this.cartes.forEach(function(element){
+      that.scene.input.setDraggable(element, opcio);
+    })
+  }
 }
 
 class Tauler extends Phaser.GameObjects.Sprite{
@@ -272,6 +279,7 @@ class Tauler extends Phaser.GameObjects.Sprite{
         this.tempsEspera = 0;
         this.temps = new Date();
         this.executatUnCop = true;
+        this.scene.ma.drag(false);
 
         if (this.valors[1] > 0){ //peces de foc
           this.scene.enemic.golpejat(this.valors[1]);
@@ -387,6 +395,7 @@ class Tauler extends Phaser.GameObjects.Sprite{
         this.estat = WAIT;
         this.scene.spriteNouTorn.setVisible(false);
         this.executatUnCop = false;
+        this.scene.ma.drag(true);
       }
     }
   }
