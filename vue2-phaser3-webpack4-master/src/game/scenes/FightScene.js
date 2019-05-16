@@ -232,8 +232,8 @@ class Ma extends Phaser.GameObjects.Sprite{
     this.accions = 4;
     Globals.escut = 0;
     this.scene.hud.updateCounter();
-    for (let i = 0; i < 4; i++){
-      if (this.scene.deck.pucRobarCarta() && this.cartes.length < 7)
+    for (let i = 0; i < 3; i++){
+      if (this.scene.deck.pucRobarCarta() && this.cartes.length < 6)
         this.robarCarta();
     }
   }

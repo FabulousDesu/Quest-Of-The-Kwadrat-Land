@@ -16,7 +16,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server --config webpack.config.dev.js --mode development",
-    "build": "webpack --config webpack.config.prod.js --mode production"
+    "build": "webpack --config webpack.config.dev.js --mode production"
   },
   "dependencies": {
     "phaser": "^3.16.2",
