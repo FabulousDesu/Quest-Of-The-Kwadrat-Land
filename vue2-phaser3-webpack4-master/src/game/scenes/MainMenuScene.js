@@ -43,6 +43,7 @@ export default class MainMenuScene extends Scene {
         this.setFrame(0);
     });
     boto_play.on('pointerdown', function (event) {
+      that.sound.play('so_boto', { start: 1000});
       that.scene.launch('MapScene');
       that.scene.stop();
     }, this);
@@ -55,6 +56,7 @@ export default class MainMenuScene extends Scene {
         this.setFrame(0);
     });
     boto_tuto.on('pointerdown', function (event) {
+      that.sound.play('so_boto', { start: 1000});
     }, this);
 
     //BOTO CREDITS
@@ -65,6 +67,7 @@ export default class MainMenuScene extends Scene {
         this.setFrame(0);
     });
     boto_credits.on('pointerdown', function (event) {
+      that.sound.play('so_boto', { start: 1000});
     }, this);
 
 

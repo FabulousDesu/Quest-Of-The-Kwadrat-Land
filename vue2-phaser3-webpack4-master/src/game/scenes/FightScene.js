@@ -58,12 +58,14 @@ export default class FightScene extends Scene {
   victoria (){
     this.scene.launch('VictoryScene');
     this.scene.bringToTop('VictoryScene');
+    this.scene.sound.play('guanyar_combat');
     this.scene.stop();
   }
 
   derrota (){
     this.scene.launch('GameOverScene', [false]);
     this.scene.bringToTop('GameOverScene');
+    this.scene.sound.play('so_game_over');
     this.scene.stop('MapScene');
     this.scene.pause();
   }
@@ -134,6 +136,7 @@ class Enemy extends Phaser.GameObjects.Sprite{
     }
 
     if (this.vida > 0){
+      this.scene.sound.play("atac_enemic");
       this.escut = 0;
       this.escut += this.accioActual[1];
       Globals.escut -= this.accioActual[0];
@@ -282,6 +285,7 @@ class Tauler extends Phaser.GameObjects.Sprite{
 
         if (this.valors[1] > 0){ //peces de foc
           this.scene.enemic.golpejat(this.valors[1]);
+          this.scene.sound.play("so_foc");
           this.buidarFitxesTauler(1);
           this.tempsEspera = 1000;
         }
@@ -297,6 +301,7 @@ class Tauler extends Phaser.GameObjects.Sprite{
         this.tempsEspera = 0;
         this.temps = new Date();
         this.executatUnCop = true;
+        this.scene.sound.play("so_gel");
 
         if (this.valors[2] > 0){ //peces de gel
           Globals.escut += this.valors[2];
@@ -316,6 +321,7 @@ class Tauler extends Phaser.GameObjects.Sprite{
         this.tempsEspera = 0;
         this.temps = new Date();
         this.executatUnCop = true;
+        this.scene.sound.play("so_veri");
 
         if (this.valors[3] > 0){ //peces de gel
           this.scene.enemic.enverinar(this.valors[3]);
@@ -334,6 +340,7 @@ class Tauler extends Phaser.GameObjects.Sprite{
         this.tempsEspera = 0;
         this.temps = new Date();
         this.executatUnCop = true;
+        this.scene.sound.play("so_vida");
 
         if (this.valors[4] > 0){ //peces de gel
           this.buidarFitxesTauler(4);
@@ -554,6 +561,7 @@ class BotoRobar extends Phaser.GameObjects.Sprite{
       if (this.scene.tauler.estat == WAIT && that.ma.accions > 0 && that.ma.cartes.length < 7 && that.scene.deck.pucRobarCarta()){
         that.ma.robarCarta();
         this.ma.dibuixarAccions(that.ma.accions-1);
+        that.scene.sound.play("so_boto");
       }
     }, this);
   }
@@ -579,8 +587,10 @@ class BotoFinalTurn extends Phaser.GameObjects.Sprite{
     });
 
     this.on('pointerdown', function (event) {
-      if (this.scene.tauler.estat == WAIT)
-      that.scene.tauler.finalTurn();
+      if (this.scene.tauler.estat == WAIT){
+        that.scene.tauler.finalTurn();
+        that.scene.sound.play("so_boto");
+      }
     }, this);
   }
 }

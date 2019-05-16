@@ -35,6 +35,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
     this.lastPos = [this.x, this.y];
     this.on('pointerover', function () {
         that.setScale(1.5*this.relacioScale);
+        that.scene.sound.play("carta");
         that.dibuixarPeces(0.7*this.relacioScale, this.dep + 1);
     });
 

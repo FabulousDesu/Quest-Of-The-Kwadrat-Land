@@ -65,7 +65,7 @@ import ost from '@/game/assets/Sound/Loopster.ogg';
 import caminar from '@/game/assets/Sound/caminar.ogg';
 import so_carta from '@/game/assets/Sound/carta.ogg';
 import so_boto from '@/game/assets/Sound/boto.ogg';
-import sortir_taverna from '@/game/assets/Sound/sortirTaverna.ogg';
+import sortir_taverna from '@/game/assets/Sound/sortirTaverma.ogg';
 import beure_cervesa from '@/game/assets/Sound/beureCervesa.ogg';
 import sortir_botiga from '@/game/assets/Sound/sortirBotiga.ogg';
 import monedes_botiga from '@/game/assets/Sound/soMonedes.ogg';
@@ -74,10 +74,10 @@ import so_entrar from '@/game/assets/Sound/entrar.ogg';
 import so_foc from '@/game/assets/Sound/soFoc.ogg';
 import so_gel from '@/game/assets/Sound/soGel.ogg';
 import so_veri from '@/game/assets/Sound/entrar.ogg'; //CANVIAR
-import so_vida from '@/game/assets/Sound/sortirTaverna.ogg'; //CANVIAR
-import atac_enemic from '@/game/assets/Sound/sortirTaverna.ogg'; //CANVIAR
-import guanyar_combat from '@/game/assets/Sound/sortirTaverna.ogg'; //CANVIAR
-import so_game_over '@/game/assets/Sound/sortirTaverna.ogg'; //CANVIAR
+import so_vida from '@/game/assets/Sound/sortirTaverma.ogg'; //CANVIAR
+import atac_enemic from '@/game/assets/Sound/sortirTaverma.ogg'; //CANVIAR
+import guanyar_combat from '@/game/assets/Sound/sortirTaverma.ogg'; //CANVIAR
+import so_game_over from '@/game/assets/Sound/sortirTaverma.ogg'; //CANVIAR
 
 export default class BootScene extends Scene {
     constructor() {
@@ -165,7 +165,6 @@ export default class BootScene extends Scene {
         this.load.audio('atac_enemic', atac_enemic);
         this.load.audio('guanyar_combat', guanyar_combat);
         this.load.audio('so_game_over', so_game_over);
-        t
     }
 
     create() {

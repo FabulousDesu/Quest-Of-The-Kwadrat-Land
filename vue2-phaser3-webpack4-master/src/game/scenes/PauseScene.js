@@ -35,6 +35,7 @@ export default class PauseScene extends Scene {
         this.setFrame(0);
     });
     boto_resume.on('pointerdown', function (event) {
+      that.sound.play('so_boto', { start: 1000, config: {volume: Globals.volume}});
       that.scene.resume(Globals.escena_ant);
       that.scene.stop();
     }, this);
@@ -45,6 +46,7 @@ export default class PauseScene extends Scene {
         this.setFrame(0);
     });
     boto_options.on('pointerdown', function (event) {
+      that.sound.play('so_boto', { start: 1000, config: {volume: Globals.volume}});
       boto_resume.setVisible(false);
       boto_options.setVisible(false);
       boto_menu.setVisible(false);
@@ -63,7 +65,8 @@ export default class PauseScene extends Scene {
       }
     })
     b_volum.on('dragend', function (pointer) {
-      Globals.ost.volume = (this.x-96) / (702-96)
+      Globals.ost.volume = (this.x-96) / (702-96);
+      that.sound.play('so_boto', { start: 1000});
     })
 
     boto_menu.on('pointerover', function () {
@@ -73,8 +76,10 @@ export default class PauseScene extends Scene {
         this.setFrame(0);
     });
     boto_menu.on('pointerdown', function (event) {
+      that.sound.play('so_boto', { start: 1000});
+      that.scene.stop(Globals.escena_ant);
       that.scene.launch('MainMenuScene');
-      that.scene.remove(Globals.escena_ant);
+      Globals.ost.stop();
       that.scene.stop();
     }, this);
     boto_enrere.on('pointerover', function () {
@@ -84,6 +89,7 @@ export default class PauseScene extends Scene {
         this.setFrame(0);
     });
     boto_enrere.on('pointerdown', function (event) {
+      that.sound.play('so_boto', { start: 1000});
       boto_resume.setVisible(true);
       boto_options.setVisible(true);
       boto_menu.setVisible(true);
@@ -94,6 +100,7 @@ export default class PauseScene extends Scene {
     }, this);
 
     this.input.keyboard.on('keydown-' + 'ESC', function (event) {
+      that.sound.play('so_boto', { start: 1000});
       that.scene.resume(Globals.escena_ant);
       that.scene.stop();
     }, this);
