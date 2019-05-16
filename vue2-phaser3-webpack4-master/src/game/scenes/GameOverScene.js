@@ -1,9 +1,9 @@
 import { Scene } from 'phaser';
+import { Globals } from './Globals.js'
 
 export default class GameOverScene extends Scene {
   init(args){
     this.victoria = args[0];
-    console.log(args[0]);
   }
   constructor () {
     super({ key: 'GameOverScene' });
@@ -14,8 +14,10 @@ export default class GameOverScene extends Scene {
     let imatge;
     if (this.victoria){
       imatge = 'afterlife';
+      this.sound.play('so_victoria_final');
     }else{
       imatge = 'gameover';
+      this.sound.play('so_game_over');
     }
 
     let gameover = this.add.image(400, 300, imatge).setInteractive();
@@ -23,8 +25,12 @@ export default class GameOverScene extends Scene {
     var that = this
     gameover.on('pointerdown', function (event) {
       that.scene.launch('MainMenuScene');
+      Globals.ost.stop();
       if (!this.victoria){
         that.scene.stop('FightScene');
+      }else{
+        this.so.stop();
+        that.sound.play('so_final_joc');
       }
       that.scene.stop();
     }, this);

@@ -10,6 +10,7 @@ export default class TavernScene extends Scene {
   }
 
   create () {
+    this.sound.play("so_entrar");
     this.pause = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
     let fonsmenu = this.add.image(400, 300, 'fmenu').setScale(2);
     let taverner =  this.add.sprite(150, 290, 'taverner2').setInteractive().setScale(2);
@@ -60,6 +61,7 @@ export default class TavernScene extends Scene {
         that.scene.resume('MapScene');
         let aux = this.scene.get('MapScene');
         aux.hud.updateCounter();
+        this.sound.play("sortir_taverna");
         that.scene.stop();
       }
     }, this);
@@ -76,6 +78,7 @@ export default class TavernScene extends Scene {
         Globals.monedes -= 25;
         Globals.vida = Math.min(Math.max(0, Globals.vida), Globals.vidaMaxima);
         this.hud.updateCounter();
+        this.sound.play("beure_cervesa");
       }
       dialeg.setVisible(false);
       that.visible = false

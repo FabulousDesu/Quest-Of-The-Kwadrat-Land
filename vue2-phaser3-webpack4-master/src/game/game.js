@@ -1,6 +1,5 @@
 import Phaser from 'phaser'
 import BootScene from './scenes/BootScene'
-import PlayScene from './scenes/PlayScene'
 import FightScene from './scenes/FightScene'
 import ShopScene from './scenes/ShopScene'
 import VictoryScene from './scenes/VictoryScene'
@@ -25,7 +24,7 @@ function launch() {
             }
         },
         pixelArt: true,
-        scene: [BootScene, PlayScene, FightScene, ShopScene, VictoryScene, TavernScene, PauseScene, GameOverScene, MainMenuScene, MapScene]
+        scene: [BootScene, FightScene, ShopScene, VictoryScene, TavernScene, PauseScene, GameOverScene, MainMenuScene, MapScene]
     })
 }
 export default launch

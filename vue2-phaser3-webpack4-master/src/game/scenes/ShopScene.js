@@ -11,6 +11,7 @@ export default class ShopScene extends Scene {
   }
 
   create () {
+    this.sound.play("so_entrar");
     this.children.add(this.add.sprite(0,0,'botiga').setOrigin(0,0).setScale(2));
 
     this.pause = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
@@ -50,6 +51,7 @@ export default class ShopScene extends Scene {
     this.exitButton.on('pointerdown', function (event) {
       that.scene.resume('MapScene');
       that.scene.get('MapScene').hud.updateCounter();
+      this.sound.play("sortir_botiga");
       that.scene.sleep();
     }, this);
   }
@@ -72,7 +74,6 @@ export default class ShopScene extends Scene {
     let i = 0;
     while( ! trobat && i < this.cartesVendre.length){
       if (carta === this.cartesVendre[i].carta){
-        console.log("trobada");
         trobat = true;
       }else {
         i++;
@@ -80,14 +81,13 @@ export default class ShopScene extends Scene {
     }
 
     let esquemaEscollida = this.cartesVendre[i];
-    console.log(esquemaEscollida);
 
     if (Globals.monedes >= esquemaEscollida.preu){
       Globals.monedes -= esquemaEscollida.preu;
       this.hud.updateCounter();
+      this.sound.play("monedes_botiga");
 
       Globals.deck.push({type: esquemaEscollida.carta.type, forma:esquemaEscollida.carta.getMatriuPeca()});
-      console.log(Globals.deck);
       esquemaEscollida.preuSprite.morir();
       esquemaEscollida.carta.morir();
       this.cartesVendre.splice(i, 1);

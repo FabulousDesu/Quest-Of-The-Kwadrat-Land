@@ -6,12 +6,7 @@ export var Globals = {
   escut: 0,
   monedes: 0,
   mouseOnCard: false,
-  deck: [{type: 4, forma: [[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]},
-         {type: 3, forma: [[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]},
-         {type: 2, forma: [[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]},
-         {type: 1, forma: [[0,0,1,1],[0,1,1,1],[1,1,1,0],[1,1,0,0]]},
-         {type: 2, forma: [[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]]},
-         {type: 1, forma: [[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]]}], //{type: 1; forma: [array]};
+  deck: [], //{type: 1; forma: [array]};
  escena_ant: '',
  pos_volum_x: 400,
  ost: undefined

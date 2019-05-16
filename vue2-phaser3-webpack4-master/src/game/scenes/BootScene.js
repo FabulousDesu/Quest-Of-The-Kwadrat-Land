@@ -73,11 +73,13 @@ import so_final_joc from '@/game/assets/Sound/soFinalJoc.ogg';
 import so_entrar from '@/game/assets/Sound/entrar.ogg';
 import so_foc from '@/game/assets/Sound/soFoc.ogg';
 import so_gel from '@/game/assets/Sound/soGel.ogg';
-import so_veri from '@/game/assets/Sound/entrar.ogg'; //CANVIAR
-import so_vida from '@/game/assets/Sound/sortirTaverma.ogg'; //CANVIAR
+import so_veri from '@/game/assets/Sound/veri.ogg';
+import so_vida from '@/game/assets/Sound/vida.ogg';
 import atac_enemic from '@/game/assets/Sound/sortirTaverma.ogg'; //CANVIAR
-import guanyar_combat from '@/game/assets/Sound/sortirTaverma.ogg'; //CANVIAR
-import so_game_over from '@/game/assets/Sound/sortirTaverma.ogg'; //CANVIAR
+import guanyar_combat from '@/game/assets/Sound/victory.ogg';
+import so_game_over from '@/game/assets/Sound/soFinalJoc.ogg';
+import so_victoria_final from '@/game/assets/Sound/victoriaRoyal.ogg';
+import colocar_peca from '@/game/assets/Sound/colocarPeca.ogg';
 
 export default class BootScene extends Scene {
     constructor() {
@@ -92,7 +94,6 @@ export default class BootScene extends Scene {
         this.load.spritesheet('boto_play', boto_play, { frameWidth: 175, frameHeight: 42 });
         this.load.spritesheet('boto_tuto', boto_tuto, { frameWidth: 13, frameHeight: 19 });
         this.load.spritesheet('boto_credits', boto_credits, { frameWidth: 13, frameHeight: 19 });
-
 
         //TAVERNA
         this.load.image('fmenu', fmenu);
@@ -165,6 +166,8 @@ export default class BootScene extends Scene {
         this.load.audio('atac_enemic', atac_enemic);
         this.load.audio('guanyar_combat', guanyar_combat);
         this.load.audio('so_game_over', so_game_over);
+        this.load.audio('so_victoria_final', so_victoria_final);
+        this.load.audio('colocar_peca', colocar_peca);
     }
 
     create() {

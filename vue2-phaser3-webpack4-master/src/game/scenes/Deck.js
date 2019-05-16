@@ -31,10 +31,8 @@ export class Deck{
   pucRobarCarta(){
     //Pre:-- Post: Retorna cert si el jugador pot robar alguna carta
     if (this.cartes.length == 0){
-      console.log("No pots robar, deck buit");
       return false;
     }else{
-      console.log("Pots robar");
       return true;
     }
   }

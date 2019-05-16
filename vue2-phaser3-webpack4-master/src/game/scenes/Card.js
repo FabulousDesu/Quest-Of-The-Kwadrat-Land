@@ -35,7 +35,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
     this.lastPos = [this.x, this.y];
     this.on('pointerover', function () {
         that.setScale(1.5*this.relacioScale);
-        that.scene.sound.play("carta");
+        that.scene.sound.play("so_carta");
         that.dibuixarPeces(0.7*this.relacioScale, this.dep + 1);
     });
 
@@ -107,8 +107,6 @@ export class Carta extends Phaser.GameObjects.Sprite{
       for(let j = -2; j < 2; j++){
         if(that.val[j+2][i+2] == 1){
           that.fitxa.push(this.scene.add.sprite(nova_x+offset/2+offset*i,nova_y+offset/2+offset*j,'fitxa', that.type-1).setScale(escala).setDepth(depth_fitxa));
-          //that.fitxa[this.fitxa.length-1].setScale(escala);
-          //that.fitxa[this.fitxa.length-1].setDepth(depth);
         }
       }
     }
@@ -198,7 +196,6 @@ export class Carta extends Phaser.GameObjects.Sprite{
 
   morir(){
     //Pre:-- Post: Carta eliminada satisfactoriament
-    console.log("morir");
     this.fitxa.forEach(function(element){element.destroy()});
     this.fitxa = [];
     this.destroy();
