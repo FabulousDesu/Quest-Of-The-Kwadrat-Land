@@ -14,23 +14,12 @@ export default class TavernScene extends Scene {
     let fonsmenu = this.add.image(400, 300, 'fmenu').setScale(2);
     let taverner =  this.add.sprite(150, 290, 'taverner2').setInteractive().setScale(2);
     let porta =  this.add.sprite(622, 336, 'porta').setInteractive().setScale(2);
-    let dialeg = this.add.image(400, 300, 'dialeg_tabarner').setScale(2).setVisible(false);
-    let yes =  this.add.sprite(680, 460, 'botoyes').setInteractive().setVisible(false).setScale(2);
-    let no =  this.add.sprite(680, 500, 'botono').setInteractive().setVisible(false).setScale(2);
+    let dialeg = this.add.image(400, 400, 'dialeg_tabarner').setScale(2).setVisible(false);
+    let yes =  this.add.sprite(660, 405, 'botoyes').setInteractive().setVisible(false).setScale(2);
+    let no =  this.add.sprite(660, 455, 'botono').setInteractive().setVisible(false).setScale(2);
     this.hud = new Hud(this, 0,0);
     this.children.add(this.hud);
 
-/*
-    fonsmenu.setScale(2);
-    taverner.setScale(2);
-    porta.setScale(2);
-    dialeg.setScale(2);
-    yes.setScale(2);
-    no.setScale(2);
-    dialeg.setVisible(false);
-    yes.setVisible(false);
-    no.setVisible(false);
-*/
     this.anims.create({
       key: "clean",
       frameRate: 15,

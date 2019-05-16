@@ -24,7 +24,7 @@ export default class GameOverScene extends Scene {
     gameover.on('pointerdown', function (event) {
       that.scene.launch('MainMenuScene');
       if (!this.victoria){
-        that.scene.remove('FightScene');
+        that.scene.stop('FightScene');
       }
       that.scene.stop();
     }, this);

@@ -72,6 +72,7 @@ export default class BootScene extends Scene {
         this.load.spritesheet('mascara', mascara, { frameWidth: 200, frameHeight: 185 });
         this.load.image('titoljoc', titoljoc);
         this.load.spritesheet('boto_play', boto_play, { frameWidth: 175, frameHeight: 42 });
+        //13 19
 
         //TAVERNA
         this.load.image('fmenu', fmenu);

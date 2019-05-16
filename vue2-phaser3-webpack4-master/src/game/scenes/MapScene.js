@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { Globals } from './Globals.js';
+import { Carta } from './Card.js';
 import { Hud } from './Hud.js';
 
 //VARIABLES
@@ -88,10 +89,13 @@ export class Casella extends Phaser.GameObjects.Sprite {
     if (this.tipus === tipusCasella[0]) {
       //si la casella es de tipus combat, et porta a l'escena del combat
       this.EscenaPare.scene.launch('FightScene');
+      /*
       if (!un_cop){
         this.EscenaPare.scene.swapPosition('FightScene', 'MapScene');
         un_cop = true;
       }
+      */
+      this.EscenaPare.scene.bringToTop('FightScene');
       this.EscenaPare.scene.pause();
       this.tipus = tipusCasella[2];
       this.enemySprite.destroy();
@@ -128,17 +132,39 @@ var jugador = {
 
 class Event extends Phaser.GameObjects.Sprite{
   constructor(scene){
-    super(scene, 400, 300, 'event').setScale(2).setInteractive().setDepth(10);
+    super(scene, 400, 300, 'event').setScale(2).setInteractive().setDepth(3);
+    this.EscenaPare = scene;
+    this.EscenaPare.event = this;
+    this.cartesEliminades = [];
 
     for (let i = 0; i < 4; i++){
       let aux = Phaser.Math.Between(0, Globals.deck.length-1);
+      this.cartesEliminades.push({type: Globals.deck[aux].type, forma: Globals.deck[aux].forma});
+
       Globals.deck.splice(aux,1);
     }
 
+    this.cops = 0;
     this.on('pointerdown', function (event) {
-      this.actuar = true;
-      this.destroy();
+      let that = this;
+      if (this.cops == 0){
+        this.cartesEliminades.forEach(function(element, index){
+          that.cartesEliminades[index] = new Carta(that.EscenaPare, 160 + 160*index, 300, that.cartesEliminades[index].type,  that.cartesEliminades[index].forma, true, 2, 4);
+          that.EscenaPare.children.add(that.cartesEliminades[index]);
+        });
+        this.cops++;
+      }else if (this.cops == 1){
+        this.morir();
+        this.cops++;
+      }
     }, this);
+  }
+
+  morir(){
+    this.cartesEliminades.forEach(function(element){element.morir()});
+    this.cartesEliminades = [];
+    actuar = true;
+    this.destroy();
   }
 }
 
@@ -335,7 +361,7 @@ export default class MapScene extends Scene {
     if (Phaser.Input.Keyboard.JustDown(this.pause)){
       Globals.escena_ant = 'MapScene';
       this.scene.launch('PauseScene');
-      this.scene.swapPosition('PauseScene', 'MapScene');
+      this.scene.bringToTop('PauseScene');
       this.scene.pause();
     }
 
@@ -343,12 +369,15 @@ export default class MapScene extends Scene {
       if(jugador.casella.tipus == "botiga"){
         if (this.scene.isSleeping('ShopScene')){
           this.scene.wake('ShopScene');
+          this.scene.bringToTop('ShopScene');
         }else{
           this.scene.launch('ShopScene');
+          this.scene.bringToTop('ShopScene');
         }
         this.scene.pause();
       }else if(jugador.casella.tipus == "taverna"){
         this.scene.launch('TavernScene');
+        this.scene.bringToTop('TavernScene');
         this.scene.pause();
 
       }
@@ -358,6 +387,10 @@ export default class MapScene extends Scene {
   arribarACasella(){
     jugador.casella.activarCasella();
     actuar = true;
+  }
+
+  intentDObtencio(carta){
+    this.event.morir();
   }
 
 }

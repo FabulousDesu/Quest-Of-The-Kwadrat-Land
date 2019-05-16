@@ -39,7 +39,7 @@ export default class MainMenuScene extends Scene {
         this.setFrame(0);
     });
     boto_play.on('pointerdown', function (event) {
-      that.scene.start('MapScene');
+      that.scene.launch('MapScene');
       that.scene.stop();
     }, this);
   }

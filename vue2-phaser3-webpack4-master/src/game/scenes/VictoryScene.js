@@ -35,12 +35,12 @@ export default class VictoryScene extends Scene {
       carta.morir();
       this.escollida = true;
       let that = this;
-      this.time.addEvent({delay: 0.5, repeat: 0, callback: that.sortir, args:[that]});
+      this.sortir();
     }
   }
 
   sortir(escena){
-    escena.scene.resume('MapScene');
-    escena.scene.stop();
+    this.scene.resume('MapScene');
+    this.scene.stop();
   }
 }

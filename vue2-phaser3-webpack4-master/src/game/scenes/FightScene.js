@@ -57,13 +57,14 @@ export default class FightScene extends Scene {
 
   victoria (){
     this.scene.launch('VictoryScene');
+    this.scene.bringToTop('VictoryScene');
     this.scene.stop();
   }
 
   derrota (){
     this.scene.launch('GameOverScene', [false]);
-    this.scene.swapPosition('FightScene', 'GameOverScene')
-    this.scene.remove('MapScene');
+    this.scene.bringToTop('GameOverScene');
+    this.scene.stop('MapScene');
     this.scene.pause();
   }
 }
@@ -104,11 +105,9 @@ class Enemy extends Phaser.GameObjects.Sprite{
     this.textIntencio.setText(this.accioActual[0] + '/' + this.accioActual[1]);
   }
 
-  heMort(){
+  mortEnemic(){
     //Pre:-- Post: Executada l'accio morir si l'enemic ha mort
-    if (this.vida < 1){
-      this.scene.victoria(); //----------------------------------------------------------------------
-    }
+    this.scene.victoria(); //----------------------------------------------------------------------
   }
 
   golpejat(valor){
@@ -120,7 +119,6 @@ class Enemy extends Phaser.GameObjects.Sprite{
     }
 
     this.updateCounters();
-    this.heMort();
   }
 
   enverinar(valor){
@@ -143,6 +141,8 @@ class Enemy extends Phaser.GameObjects.Sprite{
         Globals.vida += Globals.escut;
         Globals.escut = 0;
       }
+    }else{
+      this.mortEnemic();
     }
 
     this.updateCounters();
@@ -158,7 +158,6 @@ class Enemy extends Phaser.GameObjects.Sprite{
     //Pre:-- Post: L'enemic ha rebut l'efecte del veri
     this.vida -= this.veri;
     this.veri--;
-    this.heMort();
   }
 
   nouTorn(){
@@ -552,7 +551,7 @@ class BotoRobar extends Phaser.GameObjects.Sprite{
     });
 
     this.on('pointerdown', function (event) {
-      if (this.scene.tauler.estat == WAIT && estatthat.ma.accions > 0 && that.ma.cartes.length < 7 && that.scene.deck.pucRobarCarta()){
+      if (this.scene.tauler.estat == WAIT && that.ma.accions > 0 && that.ma.cartes.length < 7 && that.scene.deck.pucRobarCarta()){
         that.ma.robarCarta();
         this.ma.dibuixarAccions(that.ma.accions-1);
       }

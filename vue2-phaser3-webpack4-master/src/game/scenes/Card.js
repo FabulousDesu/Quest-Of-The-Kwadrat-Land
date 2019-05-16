@@ -4,12 +4,13 @@ const midaFitxa = 32;
 
 export class Carta extends Phaser.GameObjects.Sprite{
   //Classe per crear una carta del joc
-  constructor(scene, x, y, type, forma = [[0,0,0,0],[0,0,0,0],[0,0,1,0],[0,0,0,0]], obtenir = false, relacioScale = 1){
+  constructor(scene, x, y, type, forma = [[0,0,0,0],[0,0,0,0],[0,0,1,0],[0,0,0,0]], obtenir = false, relacioScale = 1, depth = 0){
     super(scene, x, y, 'carta');
     this.setScale(relacioScale);
 
     //Dibuixar la Peca sobre la Carta
-    this.setDepth(0);
+    this.setDepth(depth);
+    this.dep = depth;
     this.scene = scene;
     this.val = forma; // = random figure with val valors
     this.type = type;          // 1= foc; 2 = gel 3= veri 4= extra
@@ -19,7 +20,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
 
     let that = this;
 
-    this.dibuixarPeces(0.4*this.relacioScale);
+    this.dibuixarPeces(0.4*this.relacioScale, this.dep + 1);
 
     //Fer que sigui draggable
     this.setInteractive();
@@ -34,17 +35,17 @@ export class Carta extends Phaser.GameObjects.Sprite{
     this.lastPos = [this.x, this.y];
     this.on('pointerover', function () {
         that.setScale(1.5*this.relacioScale);
-        that.dibuixarPeces(0.7*this.relacioScale);
+        that.dibuixarPeces(0.7*this.relacioScale, this.dep + 1);
     });
 
     this.on('pointerout', function () {
       this.setScale(1*this.relacioScale);
-      that.dibuixarPeces(0.4*this.relacioScale);
+      that.dibuixarPeces(0.4*this.relacioScale, this.dep + 1);
     });
 
     this.on('dragstart', function (pointer) {
       that.setVisible(false);
-      that.dibuixarPeces(1.6*this.relacioScale, 2,true);
+      that.dibuixarPeces(1.6*this.relacioScale, this.dep + 2,true);
 
     });
 
@@ -63,7 +64,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
 
     this.on('dragend', function (pointer) {
       that.setVisible(true);
-      that.dibuixarPeces(0.4*this.relacioScale);
+      that.dibuixarPeces(0.4*this.relacioScale, this.dep + 1);
       if(that.scene.tauler.colocarCarta(that)){
         //that.fitxa.forEach(function(element){element.destroy()});
         that.fitxa.forEach(function(element, index){that.fitxa[index].destroy()});
@@ -71,7 +72,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
       }else{
         that.x = that.inicialPos[0];
         that.y = that.inicialPos[1];
-        that.dibuixarPeces(0.4);
+        that.dibuixarPeces(0.4,this.dep + 1);
         that.fitxa.forEach(function(element, index){that.fitxa[index].setDepth(1)});
       }
     });
@@ -87,7 +88,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
     this.dibuixarPeces(0.5*this.relacioScale);
   }
 
-  dibuixarPeces(escala, depth = 1, marcada = false){
+  dibuixarPeces(escala, depth_fitxa = 1, marcada = false){
     //Pre:-- Post: Dibuixada la peca que te aquesta carta
     let that = this;
     this.fitxa.forEach(function(element, index){that.fitxa[index].destroy()});
@@ -104,7 +105,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
     for(let i = -2; i < 2; i++){
       for(let j = -2; j < 2; j++){
         if(that.val[j+2][i+2] == 1){
-          that.fitxa.push(this.scene.add.sprite(nova_x+offset/2+offset*i,nova_y+offset/2+offset*j,'fitxa', that.type-1).setScale(escala).setDepth(depth));
+          that.fitxa.push(this.scene.add.sprite(nova_x+offset/2+offset*i,nova_y+offset/2+offset*j,'fitxa', that.type-1).setScale(escala).setDepth(depth_fitxa));
           //that.fitxa[this.fitxa.length-1].setScale(escala);
           //that.fitxa[this.fitxa.length-1].setDepth(depth);
         }
