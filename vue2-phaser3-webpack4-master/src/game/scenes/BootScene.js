@@ -5,6 +5,8 @@ import fonsMenu from '@/game/assets/fonsMenu.png';
 import mascara from '@/game/assets/mascara.png';
 import titoljoc from '@/game/assets/titoljoc.png';
 import boto_play from '@/game/assets/boto_play.png';
+import boto_tuto from '@/game/assets/botoTuto.png';
+import boto_credits from '@/game/assets/botoCredits.png';
 
 //TAVERNA
 import fmenu from '@/game/assets/taberna.png';
@@ -72,7 +74,9 @@ export default class BootScene extends Scene {
         this.load.spritesheet('mascara', mascara, { frameWidth: 200, frameHeight: 185 });
         this.load.image('titoljoc', titoljoc);
         this.load.spritesheet('boto_play', boto_play, { frameWidth: 175, frameHeight: 42 });
-        //13 19
+        this.load.spritesheet('boto_tuto', boto_tuto, { frameWidth: 13, frameHeight: 19 });
+        this.load.spritesheet('boto_credits', boto_credits, { frameWidth: 13, frameHeight: 19 });
+
 
         //TAVERNA
         this.load.image('fmenu', fmenu);

@@ -9,11 +9,14 @@ export default class MainMenuScene extends Scene {
   create () {
     var that = this
     let fonsMenu = this.add.image(400, 300, 'fonsMenu');
-    let boto_play = this.add.sprite(400, 450, 'boto_play', 0).setInteractive();
+    let boto_play = this.add.sprite(400, 450, 'boto_play', 0).setInteractive().setScale(2);;
+    let boto_tuto = this.add.sprite(750, 550, 'boto_tuto', 0).setInteractive().setScale(2);;
+    let boto_credits = this.add.sprite(50, 550, 'boto_credits', 0).setInteractive().setScale(2);;
     let mascara = this.add.sprite(400, 150, 'mascara');
-    let titoljoc = this.add.sprite(405, 300, 'titoljoc');
+    let titoljoc = this.add.sprite(405, 300, 'titoljoc').setScale(0.5);
+    /*
     titoljoc.setScale(0.5)
-    boto_play.setScale(2);
+    boto_play.setScale(2);*/
     let sound = this.sound.add('ost');
     sound.play({
       loop: true
@@ -32,6 +35,7 @@ export default class MainMenuScene extends Scene {
     })
     mascara.play("basicmove");
 
+    //BOTO PLAY
     boto_play.on('pointerover', function () {
         this.setFrame(1);
     });
@@ -42,6 +46,29 @@ export default class MainMenuScene extends Scene {
       that.scene.launch('MapScene');
       that.scene.stop();
     }, this);
+
+    //BOTO TUTO
+    boto_tuto.on('pointerover', function () {
+        this.setFrame(1);
+    });
+    boto_tuto.on('pointerout', function () {
+        this.setFrame(0);
+    });
+    boto_tuto.on('pointerdown', function (event) {
+    }, this);
+
+    //BOTO CREDITS
+    boto_credits.on('pointerover', function () {
+        this.setFrame(1);
+    });
+    boto_credits.on('pointerout', function () {
+        this.setFrame(0);
+    });
+    boto_credits.on('pointerdown', function (event) {
+    }, this);
+
+
+
   }
   update () {
   }
