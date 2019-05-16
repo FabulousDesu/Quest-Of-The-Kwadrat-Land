@@ -62,6 +62,22 @@ import afterlife from '@/game/assets/afterlife.png';
 
 //SO
 import ost from '@/game/assets/Sound/Loopster.ogg';
+import caminar from '@/game/assets/Sound/caminar.ogg';
+import so_carta from '@/game/assets/Sound/carta.ogg';
+import so_boto from '@/game/assets/Sound/boto.ogg';
+import sortir_taverna from '@/game/assets/Sound/sortirTaverna.ogg';
+import beure_cervesa from '@/game/assets/Sound/beureCervesa.ogg';
+import sortir_botiga from '@/game/assets/Sound/sortirBotiga.ogg';
+import monedes_botiga from '@/game/assets/Sound/soMonedes.ogg';
+import so_final_joc from '@/game/assets/Sound/soFinalJoc.ogg';
+import so_entrar from '@/game/assets/Sound/entrar.ogg';
+import so_foc from '@/game/assets/Sound/soFoc.ogg';
+import so_gel from '@/game/assets/Sound/soGel.ogg';
+import so_veri from '@/game/assets/Sound/entrar.ogg'; //CANVIAR
+import so_vida from '@/game/assets/Sound/sortirTaverna.ogg'; //CANVIAR
+import atac_enemic from '@/game/assets/Sound/sortirTaverna.ogg'; //CANVIAR
+import guanyar_combat from '@/game/assets/Sound/sortirTaverna.ogg'; //CANVIAR
+import so_game_over '@/game/assets/Sound/sortirTaverna.ogg'; //CANVIAR
 
 export default class BootScene extends Scene {
     constructor() {
@@ -132,6 +148,24 @@ export default class BootScene extends Scene {
 
         //SO
         this.load.audio('ost', ost);
+        this.load.audio('caminar', caminar);
+        this.load.audio('so_carta', so_carta);
+        this.load.audio('so_boto', so_boto);
+        this.load.audio('sortir_taverna', sortir_taverna);
+        this.load.audio('beure_cervesa', beure_cervesa);
+        this.load.audio('sortir_botiga', sortir_botiga);
+        this.load.audio('monedes_botiga', monedes_botiga);
+        this.load.audio('so_final_joc', so_final_joc);
+        this.load.audio('so_entrar', so_entrar);
+        this.load.audio('so_foc', so_foc);
+        this.load.audio('so_gel', so_gel);
+        this.load.audio('so_veri', so_veri);
+        this.load.audio('so_vida', so_vida);
+
+        this.load.audio('atac_enemic', atac_enemic);
+        this.load.audio('guanyar_combat', guanyar_combat);
+        this.load.audio('so_game_over', so_game_over);
+        t
     }
 
     create() {
