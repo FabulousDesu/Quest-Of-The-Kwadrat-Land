@@ -80,7 +80,6 @@ export default class PauseScene extends Scene {
       that.scene.stop(Globals.escena_ant);
       that.scene.stop('ShopScene');
       that.scene.launch('MainMenuScene');
-      Globals.ost.stop();
       that.scene.stop();
     }, this);
     boto_enrere.on('pointerover', function () {
