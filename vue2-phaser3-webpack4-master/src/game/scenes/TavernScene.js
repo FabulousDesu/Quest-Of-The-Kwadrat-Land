@@ -3,6 +3,7 @@ import { Globals } from './Globals.js';
 import { Hud } from './Hud.js';
 
 export default class TavernScene extends Scene {
+  //Classe per crear la taverna
   constructor () {
     super({ key: 'TavernScene' });
     this.pause
@@ -97,8 +98,6 @@ export default class TavernScene extends Scene {
       yes.setVisible(false);
       no.setVisible(false);
     }, this);
-    //const helloButton = this.add.text(100, 100, 'Hello Phaser!', { fill: '#0f0' });
-      //helloButton.setInteractive();
   }
 
   update () {

@@ -57,6 +57,7 @@ export default class FightScene extends Scene {
   }
 
   victoria (){
+    //Pre: -- Post: executa l'escena victoria
     this.scene.launch('VictoryScene');
     this.scene.bringToTop('VictoryScene');
     this.sound.play('guanyar_combat');
@@ -68,6 +69,7 @@ export default class FightScene extends Scene {
   }
 
   derrota (){
+    //Pre:-- Post: Executa l'escena de derrota
     this.scene.launch('GameOverScene', [false]);
     this.scene.bringToTop('GameOverScene');
     this.sound.play('so_game_over');
@@ -241,6 +243,7 @@ class Ma extends Phaser.GameObjects.Sprite{
   }
 
   drag(opcio){
+    //Pre:-- Post: posa el drag de les cartes a <opcio>
     let that = this;
     this.cartes.forEach(function(element){
       that.scene.input.setDraggable(element, opcio);

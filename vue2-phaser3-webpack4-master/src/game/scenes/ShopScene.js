@@ -71,6 +71,7 @@ export default class ShopScene extends Scene {
   }
 
   intentDObtencio(carta){
+    //Pre:-- Post: El jugador ha comprat la carta <carta> si té suficientment preu
     let trobat = false;
     let i = 0;
     while( ! trobat && i < this.cartesVendre.length){
@@ -105,6 +106,7 @@ class PreuCarta extends Phaser.GameObjects.Sprite{
   }
 
   morir(){
+    //Pre:-- Post: self eliminat 
     this.text.destroy();
     this.destroy();
   }

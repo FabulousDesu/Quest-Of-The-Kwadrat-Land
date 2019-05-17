@@ -78,6 +78,7 @@ export default class PauseScene extends Scene {
     boto_menu.on('pointerdown', function (event) {
       that.sound.play('so_boto', { start: 1000});
       that.scene.stop(Globals.escena_ant);
+      that.scene.stop('ShopScene');
       that.scene.launch('MainMenuScene');
       Globals.ost.stop();
       that.scene.stop();

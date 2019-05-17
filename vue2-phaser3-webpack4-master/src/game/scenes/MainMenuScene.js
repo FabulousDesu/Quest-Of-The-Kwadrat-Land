@@ -51,6 +51,7 @@ export default class MainMenuScene extends Scene {
   }
 
   restart (){
+    //Pre:-- Post: Reseteja el joc al seu estat inicial
     Globals.vida = Globals.vidaMaxima;
     Globals.escut= 0;
     Globals.monedes= 0;

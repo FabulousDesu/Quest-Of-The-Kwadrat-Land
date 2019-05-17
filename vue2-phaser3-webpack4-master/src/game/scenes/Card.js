@@ -118,6 +118,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
   }
 
   desplacarEsquerra(){
+    //Pre:-- Post: Desplaca tota la matriu de la peca una casella a la esquerra
     for (let i = 0; i < 3; i++){
       for (let j = 0; j < 4; j++){
         this.val[j][i] = this.val[j][i+1];
@@ -129,6 +130,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
   }
 
   desplacarAdalt(){
+    //Pre:-- Post: Desplaca tota la matriu de la peca una casella cap a dalt
     for (let j = 0; j < 3; j++){
       for (let i = 0; i < 4; i++){
         this.val[j][i] = this.val[j+1][i];
@@ -140,6 +142,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
   }
 
   centrarPeca(){
+    //Pre:-- Post: Centra la peca en la carta
     let valors_columna = [0,0,0,0];
     let valors_fila = [0,0,0,0];
     for (let i = 0; i < 4; i++){
@@ -159,6 +162,7 @@ export class Carta extends Phaser.GameObjects.Sprite{
   }
 
   generarPecaAleatoria(grandaria){
+    //Pre:-- Crea una fitxa aleatoria amb <grandaria> peces
     for (let i = 0; i < 4; i++){
       for (let j = 0; j < 4; j++){
         this.val[j][i] = 0;

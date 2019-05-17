@@ -20,7 +20,7 @@ var right;
 
 var entrar;
 
-//---paths---     (te, aqui tens el teu array)
+//---paths---
 var path = [
   new Phaser.Curves.Path(15, 313).lineTo(15, 313), //punt inicial i punt final
   new Phaser.Curves.Path(15, 313).lineTo(224, 313),
@@ -83,18 +83,12 @@ export class Casella extends Phaser.GameObjects.Sprite {
     this.leftSeg = leftSeg;
     this.rightSeg = rightSeg;
   }
-  activarCasella () {   ////////se que seria millor herencia, pero com que no se com es fa a javascript i no tenia temps al mati
-                        //      ho he fet aixi, sorry :P
+  activarCasella () {
+    //Pre:-- Post: Activa la casella dels jugadors
     //Activa les diferents funcions segons el tipus de casella
     if (this.tipus === tipusCasella[0]) {
       //si la casella es de tipus combat, et porta a l'escena del combat
       this.EscenaPare.scene.launch('FightScene');
-      /*
-      if (!un_cop){
-        this.EscenaPare.scene.swapPosition('FightScene', 'MapScene');
-        un_cop = true;
-      }
-      */
       this.EscenaPare.scene.bringToTop('FightScene');
       this.EscenaPare.scene.pause();
       this.tipus = tipusCasella[2];
@@ -118,9 +112,7 @@ export class Casella extends Phaser.GameObjects.Sprite {
   }
 }
 
-//---caselles---     amb les caselles no et faig l'array perque com les declaro this.add.existing i no se com funciona del tot,
-//                   encara la liare, si al final ho canvies a un array, pots fer l'estroctura de com seria i la matada de canviar
-//                   les definicions a on estan totes les caselles ho faig jo
+//---caselles---
 
 var casella0, casella1, casella2, casella3, casella4, casella5, casella6, casella7, casella8, casella9, casella10;
 
@@ -161,6 +153,7 @@ class Event extends Phaser.GameObjects.Sprite{
   }
 
   morir(){
+    //Pre:-- Post: Elimina les cartes de la ma.
     this.cartesEliminades.forEach(function(element){element.morir()});
     this.cartesEliminades = [];
     actuar = true;
@@ -190,8 +183,7 @@ export default class MapScene extends Scene {
     right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     entrar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
 
-    //INICIALITZAR CASELLES    per si al final les poses en array o has de canviar alguna cosa
-    //                         la casella 0 es la inicial, la 9 la final, la 10 l'event, la 4 la taverna i la 5 la botiga
+    //INICIALITZAR CASELLES
     casella0 = this.add.existing(new Casella(0, undefined, undefined, undefined, path[1], this, 15, 313 + posicioYCaselles, 'casellaT', tipusCasella[2]));
     casella1 = this.add.existing(new Casella(1, undefined, path[5], path[18], path[2], this, 224, 313 + posicioYCaselles, 'casella', tipusCasella[0]));
     casella2 = this.add.existing(new Casella(2, path[3], undefined, path[17], undefined, this, 288, 313 + posicioYCaselles, 'casella', tipusCasella[2]));
@@ -385,11 +377,13 @@ export default class MapScene extends Scene {
   }
 
   arribarACasella(){
+    //Pre:-- Post: Activa la casella a la que es troba el jugador.
     jugador.casella.activarCasella();
     actuar = true;
   }
 
   intentDObtencio(carta){
+    //Pre:-- Post: Eliminades les cartes de l'event.
     this.event.morir();
   }
 

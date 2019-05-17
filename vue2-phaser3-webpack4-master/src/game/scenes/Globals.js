@@ -1,5 +1,6 @@
 import { Deck } from './Deck.js';
 
+//Fitxer per guardar les globals del joc
 export var Globals = {
   vida: 10,
   vidaMaxima: 10,

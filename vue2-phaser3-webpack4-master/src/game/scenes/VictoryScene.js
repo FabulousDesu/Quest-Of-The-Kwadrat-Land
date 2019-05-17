@@ -3,6 +3,7 @@ import { Carta } from './Card.js';
 import { Globals } from './Globals.js';
 
 export default class VictoryScene extends Scene {
+  //Classe per gestionar la victoria d'un combat
   constructor(){
     super({ key: 'VictoryScene' });
   }
@@ -18,6 +19,7 @@ export default class VictoryScene extends Scene {
   }
 
   spawnCartesVictoria(){
+    //Pre:-- Post: Cartes de premi mostrades per pantalla
     this.cartes.push(new Carta(this, 200, 400, Phaser.Math.Between(1,4), [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]], true, 2));
     this.cartes.push(new Carta(this, 400, 400, Phaser.Math.Between(1,4), [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]], true, 2));
     this.cartes.push(new Carta(this, 600, 400, Phaser.Math.Between(1,4), [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]], true, 2));
@@ -30,6 +32,7 @@ export default class VictoryScene extends Scene {
   }
 
   intentDObtencio(carta){
+    //Pre:-- Post: EL jugadpr es queda amb la carta <carta> escollida
     if (! this.escollida){
       Globals.deck.push({type: carta.type, forma: carta.getMatriuPeca()});
       carta.morir();
@@ -40,6 +43,7 @@ export default class VictoryScene extends Scene {
   }
 
   sortir(escena){
+    //Pre:-- Post: S'ha sortit d'aquesta escena.
     this.scene.resume('MapScene');
     this.scene.stop();
   }
