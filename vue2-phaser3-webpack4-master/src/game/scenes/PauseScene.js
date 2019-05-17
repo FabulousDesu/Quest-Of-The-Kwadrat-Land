@@ -79,6 +79,8 @@ export default class PauseScene extends Scene {
       that.sound.play('so_boto', { start: 1000});
       that.scene.stop(Globals.escena_ant);
       that.scene.stop('ShopScene');
+      that.scene.stop('MapScene');
+      that.scene.stop('FightScene');
       that.scene.launch('MainMenuScene');
       that.scene.stop();
     }, this);
