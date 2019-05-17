@@ -112,7 +112,7 @@ export class Casella extends Phaser.GameObjects.Sprite {
     }else if (this.tipus === tipusCasella[5]){
       this.EscenaPare.scene.launch('GameOverScene', [true]);
       if (this.EscenaPare.scene.isSleeping('ShopScene'))
-        this.EscenaPare.scene.remove('ShopScene');
+        this.EscenaPare.scene.stop('ShopScene');
       this.EscenaPare.scene.stop();
     }
   }
@@ -369,11 +369,11 @@ export default class MapScene extends Scene {
       if(jugador.casella.tipus == "botiga"){
         if (this.scene.isSleeping('ShopScene')){
           this.scene.wake('ShopScene');
-          this.scene.bringToTop('ShopScene');
         }else{
           this.scene.launch('ShopScene');
-          this.scene.bringToTop('ShopScene');
         }
+        this.scene.bringToTop('ShopScene');
+        this.scene.sendToBack('MapScene');
         this.scene.pause();
       }else if(jugador.casella.tipus == "taverna"){
         this.scene.launch('TavernScene');

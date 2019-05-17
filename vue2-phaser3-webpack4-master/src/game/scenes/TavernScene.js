@@ -105,6 +105,7 @@ export default class TavernScene extends Scene {
     if (Phaser.Input.Keyboard.JustDown(this.pause)){
       Globals.escena_ant = 'TavernScene'
       this.scene.launch('PauseScene');
+      this.scene.bringToTop('PauseScene');
       this.scene.pause();
     };
   }

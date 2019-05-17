@@ -65,6 +65,7 @@ export default class ShopScene extends Scene {
     if (Phaser.Input.Keyboard.JustDown(this.pause)){
       Globals.escena_ant = 'ShopScene';
       this.scene.launch('PauseScene');
+      this.scene.bringToTop('PauseScene');
       this.scene.pause();
     }
   }

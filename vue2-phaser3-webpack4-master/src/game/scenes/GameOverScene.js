@@ -25,13 +25,12 @@ export default class GameOverScene extends Scene {
     var that = this
     gameover.on('pointerdown', function (event) {
       that.scene.launch('MainMenuScene');
-      Globals.ost.stop();
       if (!this.victoria){
         that.scene.stop('FightScene');
       }else{
-        this.so.stop();
         that.sound.play('so_final_joc');
       }
+      //this.scene.stop("ShopScene");
       that.scene.stop();
     }, this);
   }

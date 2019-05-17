@@ -13,11 +13,14 @@ export default class MainMenuScene extends Scene {
     let mascara = this.add.sprite(400, 150, 'mascara');
     let titoljoc = this.add.sprite(405, 300, 'titoljoc').setScale(0.5);
 
-    let sound = this.sound.add('ost');
-    sound.play({
-      loop: true
-    });
-    Globals.ost = sound;
+
+    if (Globals.ost === undefined){
+      let sound = this.sound.add('ost');
+      sound.play({
+        loop: true
+      });
+      Globals.ost = sound;
+    }
 
     this.restart();
 

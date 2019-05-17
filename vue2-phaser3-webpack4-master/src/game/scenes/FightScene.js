@@ -51,6 +51,7 @@ export default class FightScene extends Scene {
     if (Phaser.Input.Keyboard.JustDown(this.pause)){
       Globals.escena_ant = 'FightScene';
       this.scene.launch('PauseScene');
+      this.scene.bringToTop('PauseScene');
       this.scene.pause();
     }
   }
@@ -61,6 +62,7 @@ export default class FightScene extends Scene {
     this.sound.play('guanyar_combat');
     Globals.monedes += Phaser.Math.Between(5,15);
     let aux = this.scene.get('MapScene');
+    Globals.escut = 0;
     aux.hud.updateCounter();
     this.scene.stop();
   }
